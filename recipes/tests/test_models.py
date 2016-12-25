@@ -6,7 +6,7 @@ from django.db import IntegrityError
 from django.test import TestCase
 from model_mommy import mommy
 
-from recipes.models import Ingredient, Recipe
+from recipes.models import Kind, Ingredient, Recipe
 
 
 class BaseRecipeTestCase(TestCase):
@@ -20,6 +20,7 @@ class IngredientTest(BaseRecipeTestCase):
             user=self.user,
             name='Sand',
             price=Decimal('1.99'),
+            kind=Kind.ADDITION,
         )
 
         ingredient = Ingredient.objects.get(pk=1)
@@ -28,6 +29,7 @@ class IngredientTest(BaseRecipeTestCase):
         self.assertEqual(str(ingredient), 'Sand')
         self.assertEqual(ingredient.name, 'Sand')
         self.assertEqual(ingredient.price, Decimal('1.99'))
+        self.assertEqual(ingredient.kind, Kind.ADDITION)
         self.assertIsInstance(ingredient.created, datetime)
         self.assertIsInstance(ingredient.updated, datetime)
 
@@ -36,6 +38,7 @@ class IngredientTest(BaseRecipeTestCase):
             user=self.user,
             name='Sand',
             price=Decimal('1.99'),
+            kind=Kind.ADDITION,
         )
 
         with self.assertRaises(IntegrityError):
@@ -50,11 +53,13 @@ class IngredientTest(BaseRecipeTestCase):
             user=self.user,
             name='Sand',
             price=Decimal('1.99'),
+            kind=Kind.ADDITION,
         )
         Ingredient.objects.create(
             user=mommy.make(User),
             name='Sand',
             price=Decimal('1.99'),
+            kind=Kind.ADDITION,
         )
 
 

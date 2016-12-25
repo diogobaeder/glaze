@@ -1,5 +1,13 @@
+from enum import IntEnum
+
 from django.contrib.auth.models import User
 from django.db import models
+from enumfields import EnumIntegerField
+
+
+class Kind(IntEnum):
+    BASE = 0
+    ADDITION = 1
 
 
 class UserBoundModel(models.Model):
@@ -18,6 +26,7 @@ class UserBoundModel(models.Model):
 
 class Ingredient(UserBoundModel):
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    kind = EnumIntegerField(Kind)
 
 
 class Recipe(UserBoundModel):
