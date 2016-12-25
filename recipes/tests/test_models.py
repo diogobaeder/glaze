@@ -58,6 +58,11 @@ class IngredientTest(BaseRecipeTestCase):
             kind=Kind.ADDITION,
         )
 
+    def test_gets_kind_name(self):
+        instance = self.create_ingredient(kind=Kind.ADDITION)
+
+        self.assertEqual(instance.kind_name, 'Addition')
+
 
 class RecipeTest(BaseRecipeTestCase):
     def some_ingredient(self):

@@ -28,6 +28,10 @@ class Ingredient(UserBoundModel):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     kind = EnumIntegerField(Kind)
 
+    @property
+    def kind_name(self):
+        return self.kind.name.capitalize()
+
 
 class Recipe(UserBoundModel):
     ingredients = models.ManyToManyField(Ingredient, through='RecipePart')
