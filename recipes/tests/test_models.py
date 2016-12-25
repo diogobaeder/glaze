@@ -6,12 +6,8 @@ from django.db import IntegrityError
 from django.test import TestCase
 from model_mommy import mommy
 
+from .base import BaseRecipeTestCase
 from recipes.models import Kind, Ingredient, Recipe
-
-
-class BaseRecipeTestCase(TestCase):
-    def setUp(self):
-        self.user = mommy.make(User)
 
 
 class IngredientTest(BaseRecipeTestCase):
