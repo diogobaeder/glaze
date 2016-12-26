@@ -3,7 +3,7 @@
 {% load bootstrap3 %}
 {% load static %}
 
-{% block bootstrap3_title %}Glaze{% endblock %}
+{% block bootstrap3_title %}{% block title %}Glaze{% endblock %}{% endblock %}
 
 {% block bootstrap3_extra_head %}
 <link href="{% static 'css/navbar-fixed-top.css' %}" rel="stylesheet">
