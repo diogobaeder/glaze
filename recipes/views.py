@@ -1,5 +1,12 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
+from recipes.models import Ingredient
 
-def home(request):
-    return render(request, 'recipes/home.html')
+
+@login_required
+def ingredients(request):
+    ingredients = Ingredient.objects.all()
+    return render(request, 'ingredients.html', {
+        'ingredients': ingredients,
+    })

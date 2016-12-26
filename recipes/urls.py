@@ -4,4 +4,5 @@ from recipes import views
 
 
 urlpatterns = [
+    url(r'^ingredients/$', views.ingredients),
 ]

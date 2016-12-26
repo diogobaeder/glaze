@@ -3,14 +3,13 @@ from decimal import Decimal
 
 from django.contrib.auth.models import User
 from django.db import IntegrityError
-from django.test import TestCase
 from model_mommy import mommy
 
-from .base import BaseRecipeTestCase
+from .base import RecipeTestCase
 from recipes.models import Kind, Ingredient, Recipe
 
 
-class IngredientTest(BaseRecipeTestCase):
+class IngredientTest(RecipeTestCase):
     def test_creates_a_basic_ingredient(self):
         Ingredient.objects.create(
             user=self.user,
@@ -64,7 +63,7 @@ class IngredientTest(BaseRecipeTestCase):
         self.assertEqual(instance.kind_name, 'Addition')
 
 
-class RecipeTest(BaseRecipeTestCase):
+class RecipeTest(RecipeTestCase):
     def some_ingredient(self):
         return mommy.make(Ingredient, user=self.user)
 

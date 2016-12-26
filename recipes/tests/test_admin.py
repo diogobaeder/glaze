@@ -1,12 +1,8 @@
-from django.contrib.auth.models import User
-from django.test import TestCase
-from model_mommy import mommy
-
-from .base import BaseRecipeTestCase
-from recipes.models import Kind, Ingredient, Recipe
+from .base import RecipeTestCase
+from recipes.models import Kind
 
 
-class AdminTest(BaseRecipeTestCase):
+class AdminTest(RecipeTestCase):
     def setUp(self):
         super().setUp()
         self.client.force_login(self.user)
