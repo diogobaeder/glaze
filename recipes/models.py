@@ -10,18 +10,25 @@ class Kind(IntEnum):
     ADDITION = 1
 
 
+class UserBoundManager(models.Manager):
+    def for_user(self, user):
+        return self.filter(user=user)
+
+
 class UserBoundModel(models.Model):
     user = models.ForeignKey(User)
     name = models.CharField(max_length=200)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return self.name
+    objects = UserBoundManager()
 
     class Meta:
         abstract = True
         unique_together = (('user', 'name'),)
+
+    def __str__(self):
+        return self.name
 
 
 class Ingredient(UserBoundModel):
