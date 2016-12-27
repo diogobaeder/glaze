@@ -186,7 +186,7 @@ BOOTSTRAP3 = {
 
     # The complete URL to the Bootstrap CSS file (None means no theme)
     # 'theme_url': None,
-    'theme_url': ('https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/superhero/'
+    'theme_url': ('//maxcdn.bootstrapcdn.com/bootswatch/3.3.7/superhero/'
                   'bootstrap.min.css'),
 
     # The complete URL to the Bootstrap JavaScript file

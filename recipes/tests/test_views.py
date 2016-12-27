@@ -8,6 +8,12 @@ class AccessTest(RecipeTestCase):
         self.assertRedirects(
             response, '/accounts/login/?next=/recipes/ingredients/')
 
+    def test_cannot_load_recipes_if_not_logged_in(self):
+        response = self.client.get('/recipes/recipes/')
+
+        self.assertRedirects(
+            response, '/accounts/login/?next=/recipes/recipes/')
+
 
 class IngredientViewsTest(RecipeTestCase):
     def test_loads_ingredients_page(self):
