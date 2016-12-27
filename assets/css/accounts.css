@@ -1,0 +1,32 @@
+.socialaccount_providers {
+    list-style: none;
+    width: 100%;
+}
+
+.socialaccount_providers li {
+    float: left;
+}
+
+.socialaccount_provider {
+    display: block;
+    width: 170px;
+    height: 170px;
+    background: url(/static/img/social-media-icons-the-circle-set.png) no-repeat;
+    text-indent: -10000em;
+}
+
+.socialaccount_provider.facebook {
+    background-position: -30px -28px;
+}
+
+.socialaccount_provider.google {
+    background-position: -30px -205px;
+}
+
+.socialaccount_provider.twitter {
+    background-position: -208px -27px;
+}
+
+.login-or {
+    clear: both;
+}
