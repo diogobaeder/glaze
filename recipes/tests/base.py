@@ -1,3 +1,9 @@
+from contextlib import contextmanager
+from os import makedirs
+from os.path import abspath, dirname, join
+from shutil import copyfile
+
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.test import TestCase
 from model_mommy import mommy
@@ -19,3 +25,13 @@ class RecipeTestCase(TestCase):
     def create_recipe(self, **kwargs) -> Recipe:
         kwargs.setdefault('user', self.user)
         return mommy.make(Recipe, **kwargs)
+
+    @contextmanager
+    def fixture(self, *parts):
+        makedirs(abspath(join(settings.MEDIA_ROOT, 'fixtures', *parts[:-1])),
+                 0o755)
+        src = abspath(join(dirname(__file__), 'fixtures', *parts))
+        dst = abspath(join(settings.MEDIA_ROOT, 'fixtures', *parts))
+        copyfile(src, dst)
+        with open(dst, 'rb') as f:
+            yield f

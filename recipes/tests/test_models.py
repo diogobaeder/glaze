@@ -2,6 +2,7 @@ from datetime import datetime
 from decimal import Decimal
 
 from django.contrib.auth.models import User
+from django.core.files.images import ImageFile
 from django.db import IntegrityError
 from model_mommy import mommy
 
@@ -79,6 +80,30 @@ class RecipeTest(RecipeTestCase):
         self.assertEqual(recipe.user, self.user)
         self.assertIsInstance(recipe.created, datetime)
         self.assertIsInstance(recipe.updated, datetime)
+
+    def test_can_have_description_field(self):
+        Recipe.objects.create(
+            user=self.user,
+            name='Interesting Yellow',
+            description='Some description',
+        )
+
+        recipe = Recipe.objects.get(pk=1)
+
+        self.assertEqual(recipe.description, 'Some description')
+
+    def test_can_have_image_field(self):
+        with self.fixture('django.gif') as f:
+            Recipe.objects.create(
+                user=self.user,
+                name='Interesting Yellow',
+                image=ImageFile(f),
+            )
+
+        recipe = Recipe.objects.get(pk=1)
+
+        self.assertIn('django', recipe.image.name)
+        self.assertIn('gif', recipe.image.name)
 
     def test_contains_ingredients_in_certain_quantities(self):
         ingredient1 = self.some_ingredient()

@@ -42,6 +42,8 @@ class Ingredient(UserBoundModel):
 
 class Recipe(UserBoundModel):
     ingredients = models.ManyToManyField(Ingredient, through='RecipePart')
+    description = models.TextField(blank=True, null=True)
+    image = models.ImageField(blank=True, null=True)
 
     def add_part(self, ingredient, quantity):
         RecipePart.objects.create(
