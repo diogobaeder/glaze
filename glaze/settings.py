@@ -174,6 +174,10 @@ STATICFILES_DIRS = [
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 
+FIXTURE_DIRS = [
+    os.path.join(BASE_DIR, 'fixtures'),
+]
+
 BOOTSTRAP3 = {
 
     # The URL to the jQuery JavaScript file

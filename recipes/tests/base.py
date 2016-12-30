@@ -1,6 +1,6 @@
 from contextlib import contextmanager
 from os import makedirs
-from os.path import abspath, dirname, exists, join
+from os.path import abspath, exists, join
 from shutil import copyfile
 
 from django.conf import settings
@@ -31,7 +31,7 @@ class RecipeTestCase(TestCase):
         dst_dir = abspath(join(settings.MEDIA_ROOT, 'fixtures', *parts[:-1]))
         if not exists(dst_dir):
             makedirs(dst_dir, 0o755)
-        src = abspath(join(dirname(__file__), 'fixtures', *parts))
+        src = abspath(join(settings.BASE_DIR, 'fixtures', *parts))
         dst = abspath(join(settings.MEDIA_ROOT, 'fixtures', *parts))
         copyfile(src, dst)
         with open(dst, 'rb') as f:
