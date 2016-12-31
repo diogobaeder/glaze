@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
 from enumfields import EnumIntegerField
+from sorl.thumbnail import ImageField
 
 
 class Kind(IntEnum):
@@ -51,7 +52,7 @@ class Ingredient(UserBoundModel):
 class Recipe(UserBoundModel):
     ingredients = models.ManyToManyField(Ingredient, through='RecipePart')
     description = models.TextField(blank=True, null=True)
-    image = models.ImageField(blank=True, null=True)
+    image = ImageField(blank=True, null=True)
 
     path_prefix = 'recipe'
     path_prefix_plural = 'recipes'

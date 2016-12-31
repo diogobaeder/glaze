@@ -21,3 +21,7 @@ run:
 
 setup:
 	pip install -r requirements.txt
+	python manage.py makemigrations thumbnail
+
+freeze:
+	pip freeze > requirements.txt

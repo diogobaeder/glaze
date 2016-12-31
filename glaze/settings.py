@@ -24,6 +24,7 @@ SECRET_KEY = 'nn6yt3q7k1iz9-f)lrw=y!sdmfck96a&m_!_l*g4+w53ss7-tb'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
+TEMPLATE_DEBUG = False
 
 TESTING = bool(os.environ.get('TESTING', False))
 
@@ -43,6 +44,8 @@ INSTALLED_APPS = [
 
     'bootstrap3',
     'debug_toolbar',
+    'sorl.thumbnail',
+
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -104,6 +107,22 @@ TEMPLATES = [
     },
 ]
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+    },
+}
+
 WSGI_APPLICATION = 'glaze.wsgi.application'
 
 
@@ -152,7 +171,7 @@ AUTHENTICATION_BACKENDS = (
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en-US'
 
 TIME_ZONE = 'UTC'
 
@@ -181,6 +200,13 @@ MEDIA_URL = '/uploads/'
 FIXTURE_DIRS = [
     os.path.join(BASE_DIR, 'fixtures'),
 ]
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+    }
+}
 
 BOOTSTRAP3 = {
 

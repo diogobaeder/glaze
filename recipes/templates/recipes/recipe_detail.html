@@ -1,13 +1,30 @@
 {% extends 'recipes/base_detail.html' %}
 
+{% load thumbnail %}
+
 {% block detail_content %}
+<div class="col-xs-6">
 <dl>
-    <dt>Description:</dt>
-    <dd>{{ instance.description }}</dd>
     <dt>Price:</dt>
     <dd>{{ instance.price }}</dd>
+    <dt>Description:</dt>
+    <dd>{{ instance.description }}</dd>
 </dl>
+</div>
 
+<div class="image detail col-xs-6">
+{% if instance.image %}
+{% thumbnail instance.image "320x320" crop="center" as im %}
+    <a href="{{ instance.image.url }}" title="{{ instance.name }}" class="external">
+    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" />
+    </a>
+{% empty %}
+    <p>No image ({{ instance.image }})</p>
+{% endthumbnail %}
+{% endif %}
+</div>
+
+<div class="col-xs-12">
 <table class="table table-striped">
     <thead>
         <tr>
@@ -24,14 +41,7 @@
         {% endfor %}
     </tbody>
 </table>
-
-{% if instance.image %}
-<div class="image detail">
-<img src="{{ instance.image.url }}" title="{{ instance.name }}"
-    width="{{ instance.image.width }}"
-    height="{{ instance.image.height }}"
-    />
 </div>
-{% endif %}
+
 {% endblock %}
 
