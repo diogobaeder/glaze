@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ model_name }} | Glaze{% endblock %}
+
+{% block content %}
+<h1>{{ model_name }}: {{ instance.name }}</h1>
+
+{% block detail_content %}{% endblock %}
+
+<a class="btn btn-link" href="{% url path_prefix|stringformat:'s-update' pk=instance.pk %}" title="Edit">Edit</a>
+<a class="btn btn-danger" href="{% url path_prefix|stringformat:'s-delete' pk=instance.pk %}" title="Delete">Delete</a>
+{% endblock %}
+

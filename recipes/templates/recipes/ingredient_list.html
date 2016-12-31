@@ -1,12 +1,6 @@
-{% extends 'base.html' %}
+{% extends 'recipes/base_list.html' %}
 
-{% block title %}Ingredients | Glaze{% endblock %}
-
-{% block content %}
-<h1>Ingredients</h1>
-
-<p><a class="btn btn-link" href="{% url 'ingredient-add' %}">Add new</a></p>
-
+{% block list_content %}
 <table class="table table-striped">
     <thead>
         <tr>

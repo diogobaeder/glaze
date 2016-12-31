@@ -55,6 +55,17 @@ class IngredientCreateTest(LoggedInRecipeTestCase):
         self.assertEqual(ingredient.price, Decimal('12.34'))
         self.assertEqual(ingredient.user, self.user)
 
+    def test_cant_add_with_duplicate_name(self):
+        self.create_ingredient(name='Salt')
+
+        self.client.post('/recipes/ingredient/add/', {
+            'name': 'Salt',
+            'kind': Kind.BASE.value,
+            'price': '12.34',
+        })
+
+        self.assertEqual(Ingredient.objects.count(), 1)
+
 
 class IngredientUpdateTest(LoggedInRecipeTestCase):
     def test_loads_ingredient_edit_page(self):

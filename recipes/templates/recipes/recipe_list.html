@@ -1,10 +1,6 @@
-{% extends 'base.html' %}
+{% extends 'recipes/base_list.html' %}
 
-{% block title %}Recipes | Glaze{% endblock %}
-
-{% block content %}
-<h1>Recipes</h1>
-
+{% block list_content %}
 <table class="table table-striped">
     <thead>
         <tr>
@@ -13,9 +9,9 @@
         </tr>
     </thead>
     <tbody>
-        {% for recipe in recipes %}
+        {% for recipe in object_list %}
         <tr>
-            <td>{{ recipe.name }}</td>
+            <td><a href="{{ recipe.get_absolute_url }}" title="{{ recipe.name }}">{{ recipe.name }}</a></td>
             <td>{{ recipe.price }}</td>
         </tr>
         {% endfor %}

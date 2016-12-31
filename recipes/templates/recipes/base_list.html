@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ model_name_plural }} | Glaze{% endblock %}
+
+{% block content %}
+<h1>{{ model_name_plural }}</h1>
+
+<p><a class="btn btn-link" href="{% url path_prefix|stringformat:'s-add' %}">Add new</a></p>
+
+{% block list_content %}{% endblock %}
+
+{% endblock %}
+

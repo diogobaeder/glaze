@@ -1,5 +1,4 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import (
@@ -12,21 +11,42 @@ from django.views.generic.edit import (
     UpdateView,
 )
 
+from recipes.forms import IngredientForm, RecipeForm
 from recipes.models import Ingredient, Recipe
 
 
 class UserBound:
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
+    context_object_name = 'instance'
 
     def get_queryset(self):
         return self.model.objects.for_user(self.request.user)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['model_name'] = self.model._meta.verbose_name.title()
+        context['model_name_plural'] = (
+            self.model._meta.verbose_name_plural.title())
+        context['path_prefix'] = self.model.path_prefix
+        context['path_prefix_plural'] = self.model.path_prefix_plural
+        return context
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class=form_class)
+        form.instance.user = self.request.user
+        return form
+
+    def get_success_url(self):
+        return reverse_lazy(self.model.path_prefix_plural)
+
 
 class IngredientBound(UserBound):
     model = Ingredient
-    fields = ['name', 'kind', 'price']
+    form_class = IngredientForm
+
+
+class RecipeBound(UserBound):
+    model = Recipe
+    form_class = RecipeForm
 
 
 @method_decorator(login_required, name='dispatch')
@@ -36,7 +56,7 @@ class IngredientList(IngredientBound, ListView):
 
 @method_decorator(login_required, name='dispatch')
 class IngredientDetail(IngredientBound, DetailView):
-    context_object_name = 'ingredient'
+    pass
 
 
 @method_decorator(login_required, name='dispatch')
@@ -51,12 +71,29 @@ class IngredientUpdate(IngredientBound, UpdateView):
 
 @method_decorator(login_required, name='dispatch')
 class IngredientDelete(IngredientBound, DeleteView):
-    success_url = reverse_lazy('ingredients')
+    pass
 
 
-@login_required
-def recipes(request):
-    recipes = Recipe.objects.for_user(request.user)
-    return render(request, 'recipes.html', {
-        'recipes': recipes,
-    })
+@method_decorator(login_required, name='dispatch')
+class RecipeList(RecipeBound, ListView):
+    pass
+
+
+@method_decorator(login_required, name='dispatch')
+class RecipeDetail(RecipeBound, DetailView):
+    pass
+
+
+@method_decorator(login_required, name='dispatch')
+class RecipeCreate(RecipeBound, CreateView):
+    pass
+
+
+@method_decorator(login_required, name='dispatch')
+class RecipeUpdate(RecipeBound, UpdateView):
+    pass
+
+
+@method_decorator(login_required, name='dispatch')
+class RecipeDelete(RecipeBound, DeleteView):
+    pass

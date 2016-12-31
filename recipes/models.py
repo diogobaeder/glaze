@@ -31,23 +31,30 @@ class UserBoundModel(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse('{}-detail'.format(self.path_prefix),
+                       kwargs={'pk': self.pk})
+
 
 class Ingredient(UserBoundModel):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     kind = EnumIntegerField(Kind)
 
+    path_prefix = 'ingredient'
+    path_prefix_plural = 'ingredients'
+
     @property
     def kind_name(self):
         return self.kind.name.capitalize()
-
-    def get_absolute_url(self):
-        return reverse('ingredient-detail', kwargs={'pk': self.pk})
 
 
 class Recipe(UserBoundModel):
     ingredients = models.ManyToManyField(Ingredient, through='RecipePart')
     description = models.TextField(blank=True, null=True)
     image = models.ImageField(blank=True, null=True)
+
+    path_prefix = 'recipe'
+    path_prefix_plural = 'recipes'
 
     def add_part(self, ingredient, quantity):
         RecipePart.objects.create(
