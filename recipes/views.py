@@ -24,32 +24,33 @@ class UserBound:
         return self.model.objects.for_user(self.request.user)
 
 
-@method_decorator(login_required, name='dispatch')
-class IngredientList(UserBound, ListView):
+class IngredientBound(UserBound):
     model = Ingredient
+    fields = ['name', 'kind', 'price']
 
 
 @method_decorator(login_required, name='dispatch')
-class IngredientDetail(UserBound, DetailView):
-    model = Ingredient
+class IngredientList(IngredientBound, ListView):
+    pass
+
+
+@method_decorator(login_required, name='dispatch')
+class IngredientDetail(IngredientBound, DetailView):
     context_object_name = 'ingredient'
 
 
 @method_decorator(login_required, name='dispatch')
-class IngredientCreate(UserBound, CreateView):
-    model = Ingredient
-    fields = ['name', 'kind', 'price']
+class IngredientCreate(IngredientBound, CreateView):
+    pass
 
 
 @method_decorator(login_required, name='dispatch')
-class IngredientUpdate(UserBound, UpdateView):
-    model = Ingredient
-    fields = ['name', 'kind', 'price']
+class IngredientUpdate(IngredientBound, UpdateView):
+    pass
 
 
 @method_decorator(login_required, name='dispatch')
-class IngredientDelete(UserBound, DeleteView):
-    model = Ingredient
+class IngredientDelete(IngredientBound, DeleteView):
     success_url = reverse_lazy('ingredients')
 
 
