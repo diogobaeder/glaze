@@ -23,7 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'nn6yt3q7k1iz9-f)lrw=y!sdmfck96a&m_!_l*g4+w53ss7-tb'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
+
+TESTING = bool(os.environ.get('TESTING', False))
 
 ALLOWED_HOSTS = []
 
@@ -174,6 +176,8 @@ STATICFILES_DIRS = [
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 
+MEDIA_URL = '/uploads/'
+
 FIXTURE_DIRS = [
     os.path.join(BASE_DIR, 'fixtures'),
 ]
@@ -248,6 +252,6 @@ BOOTSTRAP3 = {
 
 
 try:
-    from local_settings import *  # noqa
+    from .local_settings import *  # noqa
 except ImportError:
     pass

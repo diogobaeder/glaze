@@ -1,3 +1,5 @@
+export TESTING=1
+
 build: test lint
 
 test:

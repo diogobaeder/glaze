@@ -13,10 +13,13 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
+import re
+
 import debug_toolbar
 from django.conf import settings
 from django.conf.urls import url, include
 from django.contrib import admin
+from django.views.static import serve
 
 from . import views
 
@@ -28,7 +31,11 @@ urlpatterns = [
     url(r'^accounts/profile/$', views.profile),
     url(r'^$', views.home),
 ]
-if settings.DEBUG:
+if settings.DEBUG or settings.TESTING:
     urlpatterns += [
         url(r'^__debug__/', include(debug_toolbar.urls)),
+        url(r'^%s(?P<path>.*)$' % re.escape(settings.MEDIA_URL.lstrip('/')),
+            serve, kwargs={
+                'document_root': settings.MEDIA_ROOT,
+            })
     ]

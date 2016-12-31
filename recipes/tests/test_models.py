@@ -105,6 +105,20 @@ class RecipeTest(RecipeTestCase):
         self.assertIn('django', recipe.image.name)
         self.assertIn('gif', recipe.image.name)
 
+    def test_can_load_image(self):
+        with self.fixture('django.gif') as f:
+            Recipe.objects.create(
+                user=self.user,
+                name='Interesting Yellow',
+                image=ImageFile(f, 'fixtures/django.gif'),
+            )
+
+        recipe = Recipe.objects.get(pk=1)
+
+        response = self.client.get(recipe.image.url)
+
+        self.assertEqual(response.status_code, 200)
+
     def test_contains_ingredients_in_certain_quantities(self):
         ingredient1 = self.some_ingredient()
         ingredient2 = self.some_ingredient()
