@@ -8,6 +8,23 @@
     <dd>{{ instance.price }}</dd>
 </dl>
 
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Quantity</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for part in instance.parts %}
+        <tr>
+            <td>{{ part.ingredient }}</td>
+            <td>{{ part.quantity }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
 {% if instance.image %}
 <div class="image detail">
 <img src="{{ instance.image.url }}" title="{{ instance.name }}"

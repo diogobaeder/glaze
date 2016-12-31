@@ -1,3 +1,7 @@
 .image.detail {
     margin: 10px 0;
 }
+
+fieldset.recipe-parts .checkbox {
+    padding-top: 0;
+}

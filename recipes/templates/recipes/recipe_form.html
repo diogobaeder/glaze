@@ -1,2 +1,16 @@
 {% extends 'recipes/base_form.html' %}
 
+{% load bootstrap3 %}
+
+{% block additional_fieldsets %}
+<fieldset class="form-inline recipe-parts">
+    <legend>Parts</legend>
+    {% for form in recipe_part_form %}
+        <div class="col-xs-12 row">
+        {% bootstrap_form form layout='horizontal' %}
+        </div>
+    {% endfor %}
+    {{ recipe_part_form.management_form }}
+</fieldset>
+{% endblock %}
+

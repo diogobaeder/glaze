@@ -8,8 +8,12 @@
 <h1>Editing {{ model_name }}: {{ form.instance.name }}</h1>
 
 <form class="login form-horizontal" method="POST" action="" {% if form.image %}enctype="multipart/form-data"{% endif %}>
-  {% csrf_token %}
-  {% bootstrap_form form layout='horizontal' %}
+  <fieldset>
+    <legend>{{ model_name }}</legend>
+    {% csrf_token %}
+    {% bootstrap_form form layout='horizontal' %}
+  </fieldset>
+  {% block additional_fieldsets %}{% endblock %}
   <button class="btn btn-default" type="submit">Submit</button>
 </form>
 {% endblock %}

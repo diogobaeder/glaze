@@ -11,7 +11,7 @@ from django.views.generic.edit import (
     UpdateView,
 )
 
-from recipes.forms import IngredientForm, RecipeForm
+from recipes.forms import IngredientForm, RecipeForm, RecipePartFormset
 from recipes.models import Ingredient, Recipe
 
 
@@ -23,11 +23,13 @@ class UserBound:
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
         context['model_name'] = self.model._meta.verbose_name.title()
         context['model_name_plural'] = (
             self.model._meta.verbose_name_plural.title())
         context['path_prefix'] = self.model.path_prefix
         context['path_prefix_plural'] = self.model.path_prefix_plural
+
         return context
 
     def get_form(self, form_class=None):
@@ -47,6 +49,27 @@ class IngredientBound(UserBound):
 class RecipeBound(UserBound):
     model = Recipe
     form_class = RecipeForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        if self.request.POST:
+            context['recipe_part_form'] = RecipePartFormset(self.request.POST)
+        else:
+            context['recipe_part_form'] = RecipePartFormset()
+
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        recipe_part_form = context['recipe_part_form']
+        if recipe_part_form.is_valid():
+            self.object = form.save()
+            recipe_part_form.instance = self.object
+            recipe_part_form.save()
+            return super().form_valid(form=form)
+        else:
+            return super().form_invalid(form=form)
 
 
 @method_decorator(login_required, name='dispatch')
