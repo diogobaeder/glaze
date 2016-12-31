@@ -2,10 +2,19 @@
 
 {% block detail_content %}
 <dl>
-    <dt>Kind:</dt>
-    <dd>{{ instance.kind_name }}</dd>
+    <dt>Description:</dt>
+    <dd>{{ instance.description }}</dd>
     <dt>Price:</dt>
     <dd>{{ instance.price }}</dd>
 </dl>
+
+{% if instance.image %}
+<div class="image detail">
+<img src="{{ instance.image.url }}" title="{{ instance.name }}"
+    width="{{ instance.image.width }}"
+    height="{{ instance.image.height }}"
+    />
+</div>
+{% endif %}
 {% endblock %}
 

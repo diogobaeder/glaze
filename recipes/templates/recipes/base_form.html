@@ -7,7 +7,7 @@
 {% block content %}
 <h1>Editing {{ model_name }}: {{ form.instance.name }}</h1>
 
-<form class="login form-horizontal" method="POST" action="">
+<form class="login form-horizontal" method="POST" action="" {% if form.image %}enctype="multipart/form-data"{% endif %}>
   {% csrf_token %}
   {% bootstrap_form form layout='horizontal' %}
   <button class="btn btn-default" type="submit">Submit</button>
