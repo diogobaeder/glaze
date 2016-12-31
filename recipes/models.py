@@ -2,6 +2,7 @@ from enum import IntEnum
 
 from django.contrib.auth.models import User
 from django.db import models
+from django.urls import reverse
 from enumfields import EnumIntegerField
 
 
@@ -38,6 +39,9 @@ class Ingredient(UserBoundModel):
     @property
     def kind_name(self):
         return self.kind.name.capitalize()
+
+    def get_absolute_url(self):
+        return reverse('ingredient-detail', kwargs={'pk': self.pk})
 
 
 class Recipe(UserBoundModel):

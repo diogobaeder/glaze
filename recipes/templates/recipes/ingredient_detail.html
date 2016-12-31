@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% load bootstrap3 %}
+
+{% block title %}Ingredient | Glaze{% endblock %}
+
+{% block content %}
+<h1>Ingredient: {{ ingredient.name }}</h1>
+
+<dl>
+    <dt>Kind:</dt>
+    <dd>{{ ingredient.kind_name }}</dd>
+    <dt>Price:</dt>
+    <dd>{{ ingredient.price }}</dd>
+</dl>
+
+<a class="btn btn-link" href="{% url 'ingredient-update' pk=ingredient.pk %}" title="Edit">Edit</a>
+<a class="btn btn-danger" href="{% url 'ingredient-delete' pk=ingredient.pk %}" title="Delete">Delete</a>
+{% endblock %}
+

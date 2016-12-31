@@ -5,6 +5,8 @@
 {% block content %}
 <h1>Ingredients</h1>
 
+<p><a class="btn btn-link" href="{% url 'ingredient-add' %}">Add new</a></p>
+
 <table class="table table-striped">
     <thead>
         <tr>
@@ -14,9 +16,9 @@
         </tr>
     </thead>
     <tbody>
-        {% for ingredient in ingredients %}
+        {% for ingredient in object_list %}
         <tr>
-            <td>{{ ingredient.name }}</td>
+            <td><a href="{{ ingredient.get_absolute_url }}" title="{{ ingredient.name }}">{{ ingredient.name }}</a></td>
             <td>{{ ingredient.kind_name }}</td>
             <td>{{ ingredient.price }}</td>
         </tr>
