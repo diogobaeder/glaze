@@ -1,7 +1,7 @@
 from contextlib import contextmanager
 from os import makedirs
 from os.path import abspath, exists, join
-from shutil import copyfile
+from shutil import copyfile, rmtree
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -29,8 +29,9 @@ class RecipeTestCase(TestCase):
     @contextmanager
     def fixture(self, *parts):
         dst_dir = abspath(join(settings.MEDIA_ROOT, 'fixtures', *parts[:-1]))
-        if not exists(dst_dir):
-            makedirs(dst_dir, 0o755)
+        if exists(dst_dir):
+            rmtree(dst_dir)
+        makedirs(dst_dir, 0o755)
         src = abspath(join(settings.BASE_DIR, 'fixtures', *parts))
         dst = abspath(join(settings.MEDIA_ROOT, 'fixtures', *parts))
         copyfile(src, dst)

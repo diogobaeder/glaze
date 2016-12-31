@@ -1,6 +1,12 @@
 from .base import RecipeTestCase
 
 
+class LoggedInRecipeTestCase(RecipeTestCase):
+    def setUp(self):
+        super().setUp()
+        self.client.force_login(self.user)
+
+
 class AccessTest(RecipeTestCase):
     def test_cannot_load_ingredients_if_not_logged_in(self):
         response = self.client.get('/recipes/ingredients/')
@@ -15,11 +21,10 @@ class AccessTest(RecipeTestCase):
             response, '/accounts/login/?next=/recipes/recipes/')
 
 
-class IngredientViewsTest(RecipeTestCase):
+class IngredientViewsTest(LoggedInRecipeTestCase):
     def test_loads_ingredients_page(self):
         ingredient = self.create_ingredient()
 
-        self.client.force_login(self.user)
         response = self.client.get('/recipes/ingredients/')
 
         self.assertContains(response, ingredient.name)
@@ -27,17 +32,15 @@ class IngredientViewsTest(RecipeTestCase):
     def test_doesnt_load_from_another_user(self):
         ingredient = self.create_ingredient(user=self.another_user)
 
-        self.client.force_login(self.user)
         response = self.client.get('/recipes/ingredients/')
 
         self.assertNotContains(response, ingredient.name)
 
 
-class RecipeViewsTest(RecipeTestCase):
+class RecipeViewsTest(LoggedInRecipeTestCase):
     def test_loads_recipes_page(self):
         recipe = self.create_recipe()
 
-        self.client.force_login(self.user)
         response = self.client.get('/recipes/recipes/')
 
         self.assertContains(response, recipe.name)
@@ -45,7 +48,6 @@ class RecipeViewsTest(RecipeTestCase):
     def test_doesnt_load_from_another_user(self):
         recipe = self.create_recipe(user=self.another_user)
 
-        self.client.force_login(self.user)
         response = self.client.get('/recipes/recipes/')
 
         self.assertNotContains(response, recipe.name)
