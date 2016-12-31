@@ -1,11 +1,14 @@
 {% extends 'recipes/base_list.html' %}
 
+{% load thumbnail %}
+
 {% block list_content %}
 <table class="table table-striped">
     <thead>
         <tr>
             <th>Name</th>
             <th>Price</th>
+            <th>Image</th>
         </tr>
     </thead>
     <tbody>
@@ -13,6 +16,22 @@
         <tr>
             <td><a href="{{ recipe.get_absolute_url }}" title="{{ recipe.name }}">{{ recipe.name }}</a></td>
             <td>{{ recipe.price }}</td>
+            <td>
+            {% if recipe.image %}
+            {% thumbnail recipe.image "50x50" crop="center" as im %}
+                <a href="{{ recipe.image.url }}" title="{{ recipe.name }}" class="external"
+                    data-toggle="lightbox"
+                    data-gallery="Recipes"
+                    data-title="{{ recipe.name }}"
+                    data-footer="{{ recipe.description }}"
+                    >
+                <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" class="img-fluid" />
+                </a>
+            {% empty %}
+                <p>No image ({{ recipe.image }})</p>
+            {% endthumbnail %}
+            {% endif %}
+            </td>
         </tr>
         {% endfor %}
     </tbody>
