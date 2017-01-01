@@ -51,7 +51,8 @@
 
 {% block bootstrap3_extra_script %}
 <script src="{% static 'js/ekko-lightbox.min.js' %}"></script>
-<script type="text/javascript">
+<script src="{% static 'js/jquery.formset.min.js' %}"></script>
+<script>
 $(document).on('click', '[data-toggle="lightbox"]', function(event) {
     event.preventDefault();
     $(this).ekkoLightbox();

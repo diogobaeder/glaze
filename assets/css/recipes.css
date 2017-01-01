@@ -2,6 +2,10 @@
     margin: 10px 0;
 }
 
-fieldset.recipe-parts .checkbox {
-    padding-top: 0;
+.recipe-parts {
+    margin-bottom: .5em;
+}
+
+.recipe-part {
+    margin: .5em 0;
 }

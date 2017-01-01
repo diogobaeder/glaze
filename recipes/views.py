@@ -52,11 +52,13 @@ class RecipeBound(UserBound):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        instance = getattr(self, 'object', None)
 
         if self.request.POST:
-            context['recipe_part_form'] = RecipePartFormset(self.request.POST)
+            context['recipe_part_form'] = RecipePartFormset(
+                self.request.POST, instance=instance)
         else:
-            context['recipe_part_form'] = RecipePartFormset()
+            context['recipe_part_form'] = RecipePartFormset(instance=instance)
 
         return context
 
