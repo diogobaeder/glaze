@@ -4,13 +4,9 @@ from .base import RecipeTestCase
 from recipes.models import Kind, Ingredient, WeightUnit
 
 
-class LoggedInRecipeTestCase(RecipeTestCase):
-    def setUp(self):
-        super().setUp()
-        self.client.force_login(self.user)
+class IngredientListTest(RecipeTestCase):
+    LOGIN = True
 
-
-class IngredientListTest(LoggedInRecipeTestCase):
     def test_loads_ingredients_page(self):
         ingredient = self.create_ingredient()
 
@@ -26,7 +22,9 @@ class IngredientListTest(LoggedInRecipeTestCase):
         self.assertNotContains(response, ingredient.name)
 
 
-class IngredientDetailTest(LoggedInRecipeTestCase):
+class IngredientDetailTest(RecipeTestCase):
+    LOGIN = True
+
     def test_loads_ingredient_detail(self):
         ingredient = self.create_ingredient()
 
@@ -35,7 +33,9 @@ class IngredientDetailTest(LoggedInRecipeTestCase):
         self.assertContains(response, ingredient.name)
 
 
-class IngredientCreateTest(LoggedInRecipeTestCase):
+class IngredientCreateTest(RecipeTestCase):
+    LOGIN = True
+
     def test_loads_ingredient_add_page(self):
         response = self.client.get('/recipes/ingredient/add/')
 
@@ -69,7 +69,9 @@ class IngredientCreateTest(LoggedInRecipeTestCase):
         self.assertEqual(Ingredient.objects.count(), 1)
 
 
-class IngredientUpdateTest(LoggedInRecipeTestCase):
+class IngredientUpdateTest(RecipeTestCase):
+    LOGIN = True
+
     def test_loads_ingredient_edit_page(self):
         self.create_ingredient(name='Pepper')
 
@@ -112,7 +114,9 @@ class IngredientUpdateTest(LoggedInRecipeTestCase):
         self.assertEqual(response.status_code, 404)
 
 
-class RecipeViewsTest(LoggedInRecipeTestCase):
+class RecipeViewsTest(RecipeTestCase):
+    LOGIN = True
+
     def test_loads_recipes_page(self):
         recipe = self.create_recipe()
 
