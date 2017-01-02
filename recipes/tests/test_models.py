@@ -65,9 +65,6 @@ class IngredientTest(RecipeTestCase):
 
 
 class RecipeTest(RecipeTestCase):
-    def some_ingredient(self):
-        return mommy.make(Ingredient, user=self.user)
-
     def test_creates_a_basic_recipe(self):
         Recipe.objects.create(
             user=self.user,
@@ -120,8 +117,8 @@ class RecipeTest(RecipeTestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_contains_ingredients_in_certain_quantities(self):
-        ingredient1 = self.some_ingredient()
-        ingredient2 = self.some_ingredient()
+        ingredient1 = self.create_ingredient()
+        ingredient2 = self.create_ingredient()
         recipe = Recipe.objects.create(
             user=self.user,
             name='Interesting Yellow'
@@ -137,8 +134,10 @@ class RecipeTest(RecipeTestCase):
         self.assertEqual(parts[1].quantity, Decimal('0.3'))
 
     def test_calculates_price_based_on_ingredients(self):
-        ingredient1 = self.some_ingredient()
-        ingredient2 = self.some_ingredient()
+        ingredient1 = self.create_ingredient(
+            price=Decimal('1.23'), weight_unit=WeightUnit.g)
+        ingredient2 = self.create_ingredient(
+            price=Decimal('2.34'), weight_unit=WeightUnit.Kg)
         recipe = Recipe.objects.create(
             user=self.user,
             name='Interesting Yellow'
@@ -148,12 +147,44 @@ class RecipeTest(RecipeTestCase):
         recipe.add_part(ingredient2, quantity=Decimal('0.3'))
 
         self.assertEqual(recipe.price, (
-            ingredient1.price * Decimal('0.2') +
-            ingredient2.price * Decimal('0.3')
+            Decimal('1.23') * Decimal('1000') * Decimal('0.2') +
+            Decimal('2.34') * Decimal('1') * Decimal('0.3')
         ))
 
+    def test_uses_correct_multiplication_for_price(self):
+        """Just a sanity check test."""
+        ingredient1 = self.create_ingredient(
+            price=Decimal('0.05'), weight_unit=WeightUnit.g)
+        ingredient2 = self.create_ingredient(
+            price=Decimal('50.00'), weight_unit=WeightUnit.Kg)
+        recipe = Recipe.objects.create(
+            user=self.user,
+            name='Interesting Yellow'
+        )
 
-class KindTest(RecipeTest):
+        recipe.add_part(ingredient1, quantity=Decimal('1'))
+        recipe.add_part(ingredient2, quantity=Decimal('1'))
+
+        self.assertEqual(recipe.price, Decimal('100'))
+
+
+class KindTest(RecipeTestCase):
     def test_converts_to_pretty_name(self):
         self.assertEqual(str(Kind.Base), 'Base')
         self.assertEqual(str(Kind.Addition), 'Addition')
+
+
+class WeightUnitTest(RecipeTestCase):
+    def test_gets_weighted_in_for_equal_units(self):
+        self.assertEqual(
+            WeightUnit.Kg.weighted_in(WeightUnit.Kg), Decimal('1'))
+        self.assertEqual(
+            WeightUnit.g.weighted_in(WeightUnit.g), Decimal('1'))
+
+    def test_gets_kg_weighted_in_g(self):
+        self.assertEqual(
+            WeightUnit.Kg.weighted_in(WeightUnit.g), Decimal('1000'))
+
+    def test_gets_g_weighted_in_kg(self):
+        self.assertEqual(
+            WeightUnit.g.weighted_in(WeightUnit.Kg), Decimal('0.001'))

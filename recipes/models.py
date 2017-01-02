@@ -1,3 +1,4 @@
+from decimal import Decimal
 from enum import IntEnum
 
 from django.contrib.auth.models import User
@@ -20,6 +21,13 @@ class Kind(PrettyIntEnum):
 class WeightUnit(PrettyIntEnum):
     g = 0
     Kg = 1
+
+    def weighted_in(self, weight_unit):
+        if self is self.Kg and weight_unit is self.g:
+            return Decimal('1000')
+        if self is self.g and weight_unit is self.Kg:
+            return Decimal('0.001')
+        return Decimal('1')
 
 
 class UserBoundManager(models.Manager):
@@ -64,6 +72,8 @@ class Recipe(UserBoundModel):
     path_prefix = 'recipe'
     path_prefix_plural = 'recipes'
 
+    REFERENCE_WEIGHT_UNIT = WeightUnit.Kg
+
     def add_part(self, ingredient, quantity):
         RecipePart.objects.create(
             recipe=self,
@@ -77,10 +87,14 @@ class Recipe(UserBoundModel):
 
     @property
     def price(self):
-        price = 0
+        price = Decimal('0')
 
         for part in self.parts:
-            price += (part.ingredient.price * part.quantity)
+            i = part.ingredient
+            price += (
+                i.price * part.quantity
+                * self.REFERENCE_WEIGHT_UNIT.weighted_in(i.weight_unit)
+            )
 
         return price
 
