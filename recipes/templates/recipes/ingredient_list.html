@@ -13,8 +13,8 @@
         {% for ingredient in object_list %}
         <tr>
             <td><a href="{{ ingredient.get_absolute_url }}" title="{{ ingredient.name }}">{{ ingredient.name }}</a></td>
-            <td>{{ ingredient.kind.name.capitalize }}</td>
-            <td>{{ ingredient.price }}/{{ ingredient.weight_unit.name.capitalize }}</td>
+            <td>{{ ingredient.kind }}</td>
+            <td>{{ ingredient.price }}/{{ ingredient.weight_unit }}</td>
         </tr>
         {% endfor %}
     </tbody>
