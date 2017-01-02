@@ -72,6 +72,7 @@ INSTALLED_APPS = [
     # 'allauth.socialaccount.providers.windowslive',
     # 'allauth.socialaccount.providers.xing',
 
+    'glaze',
     'recipes',
 ]
 

@@ -3,9 +3,7 @@ from recipes.models import Kind
 
 
 class AdminTest(RecipeTestCase):
-    def setUp(self):
-        super().setUp()
-        self.client.force_login(self.user)
+    LOGIN = True
 
     def test_shows_ingredients(self):
         instance = self.create_ingredient(kind=Kind.Addition)

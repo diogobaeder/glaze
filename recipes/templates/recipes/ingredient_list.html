@@ -14,7 +14,7 @@
         <tr>
             <td><a href="{{ ingredient.get_absolute_url }}" title="{{ ingredient.name }}">{{ ingredient.name }}</a></td>
             <td>{{ ingredient.kind }}</td>
-            <td>{{ ingredient.price }}/{{ ingredient.weight_unit }}</td>
+            <td>{{ user.profile.currency }} {{ ingredient.price }}/{{ ingredient.weight_unit }}</td>
         </tr>
         {% endfor %}
     </tbody>

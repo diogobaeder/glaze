@@ -11,6 +11,9 @@ lint:
 migrations:
 	python manage.py makemigrations
 
+apply-migrations:
+	python manage.py migrate
+
 delete-migrations:
 	find . -type f -regex '.*/migrations/[0-9].*\.py' -delete
 
