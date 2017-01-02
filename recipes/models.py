@@ -81,6 +81,7 @@ class Recipe(UserBoundModel):
 class RecipePart(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
-    quantity = models.DecimalField(max_digits=10, decimal_places=4)
+    quantity = models.DecimalField(max_digits=10, decimal_places=4,
+                                   verbose_name='Amount')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
