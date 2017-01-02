@@ -12,6 +12,11 @@ class Kind(IntEnum):
     ADDITION = 1
 
 
+class WeightUnit(IntEnum):
+    G = 0
+    KG = 1
+
+
 class UserBoundManager(models.Manager):
     def for_user(self, user):
         return self.filter(user=user)
@@ -40,6 +45,7 @@ class UserBoundModel(models.Model):
 class Ingredient(UserBoundModel):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     kind = EnumIntegerField(Kind)
+    weight_unit = EnumIntegerField(WeightUnit)
 
     path_prefix = 'ingredient'
     path_prefix_plural = 'ingredients'

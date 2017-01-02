@@ -1,7 +1,7 @@
 from decimal import Decimal
 
 from .base import RecipeTestCase
-from recipes.models import Kind, Ingredient
+from recipes.models import Kind, Ingredient, WeightUnit
 
 
 class LoggedInRecipeTestCase(RecipeTestCase):
@@ -46,6 +46,7 @@ class IngredientCreateTest(LoggedInRecipeTestCase):
             'name': 'Salt',
             'kind': Kind.BASE.value,
             'price': '12.34',
+            'weight_unit': WeightUnit.KG.value,
         })
 
         ingredient = Ingredient.objects.get(pk=1)
@@ -62,6 +63,7 @@ class IngredientCreateTest(LoggedInRecipeTestCase):
             'name': 'Salt',
             'kind': Kind.BASE.value,
             'price': '12.34',
+            'weight_unit': WeightUnit.KG.value,
         })
 
         self.assertEqual(Ingredient.objects.count(), 1)
@@ -91,6 +93,7 @@ class IngredientUpdateTest(LoggedInRecipeTestCase):
             'name': 'Pepper 2',
             'kind': Kind.BASE.value,
             'price': '12.34',
+            'weight_unit': WeightUnit.KG.value,
         })
 
         ingredient = Ingredient.objects.get(pk=2)
@@ -103,6 +106,7 @@ class IngredientUpdateTest(LoggedInRecipeTestCase):
             'name': 'Pepper 2',
             'kind': Kind.BASE.value,
             'price': '12.34',
+            'weight_unit': WeightUnit.KG.value,
         })
 
         self.assertEqual(response.status_code, 404)

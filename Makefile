@@ -11,10 +11,15 @@ lint:
 migrations:
 	python manage.py makemigrations
 
-resetdb:
+delete-migrations:
+	find . -type f -regex '.*/migrations/[0-9].*\.py' -delete
+
+reset-db:
 	rm -f db.sqlite3
 	python manage.py migrate
 	python manage.py loaddata users.json
+
+reset-migrations: delete-migrations migrations
 
 run:
 	python manage.py runserver

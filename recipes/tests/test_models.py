@@ -7,7 +7,7 @@ from django.db import IntegrityError
 from model_mommy import mommy
 
 from .base import RecipeTestCase
-from recipes.models import Kind, Ingredient, Recipe
+from recipes.models import Kind, Ingredient, Recipe, WeightUnit
 
 
 class IngredientTest(RecipeTestCase):
@@ -17,6 +17,7 @@ class IngredientTest(RecipeTestCase):
             name='Sand',
             price=Decimal('1.99'),
             kind=Kind.ADDITION,
+            weight_unit=WeightUnit.KG,
         )
 
         ingredient = Ingredient.objects.get(pk=1)
@@ -28,6 +29,7 @@ class IngredientTest(RecipeTestCase):
         self.assertEqual(ingredient.kind, Kind.ADDITION)
         self.assertIsInstance(ingredient.created, datetime)
         self.assertIsInstance(ingredient.updated, datetime)
+        self.assertEqual(ingredient.weight_unit, WeightUnit.KG)
 
     def test_cannot_create_ingredients_with_same_name(self):
         Ingredient.objects.create(
@@ -35,6 +37,7 @@ class IngredientTest(RecipeTestCase):
             name='Sand',
             price=Decimal('1.99'),
             kind=Kind.ADDITION,
+            weight_unit=WeightUnit.KG,
         )
 
         with self.assertRaises(IntegrityError):
@@ -50,12 +53,14 @@ class IngredientTest(RecipeTestCase):
             name='Sand',
             price=Decimal('1.99'),
             kind=Kind.ADDITION,
+            weight_unit=WeightUnit.KG,
         )
         Ingredient.objects.create(
             user=mommy.make(User),
             name='Sand',
             price=Decimal('1.99'),
             kind=Kind.ADDITION,
+            weight_unit=WeightUnit.KG,
         )
 
     def test_gets_kind_name(self):

@@ -15,9 +15,11 @@
   </fieldset>
   {% block additional_fieldsets %}{% endblock %}
   <button class="btn btn-primary" type="submit">Submit</button>
+  {% if form.instance.pk %}
   <a class="btn btn-link"
     href="{% url path_prefix|stringformat:'s-detail' pk=form.instance.pk %}"
     title="Back to details">Back to details</a>
+  {% endif %}
 </form>
 {% endblock %}
 

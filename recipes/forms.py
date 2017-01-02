@@ -21,7 +21,7 @@ class UserBoundForm(ModelForm):
 class IngredientForm(UserBoundForm):
     class Meta:
         model = Ingredient
-        fields = ['name', 'kind', 'price']
+        fields = ['name', 'kind', 'weight_unit', 'price']
 
 
 class RecipeForm(UserBoundForm):

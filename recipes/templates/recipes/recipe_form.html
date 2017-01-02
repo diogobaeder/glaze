@@ -9,8 +9,8 @@
     {{ recipe_part_form.management_form }}
     </div>
     {% for form in recipe_part_form %}
-        <div class="col-xs-12 row recipe-part">
-        {% bootstrap_form form layout='horizontal' %}
+        <div class="recipe-part row">
+        {% bootstrap_form form layout='horizontal' form_group_class='form-group col-xs-5' %}
         </div>
     {% endfor %}
 </fieldset>

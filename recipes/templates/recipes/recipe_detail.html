@@ -4,7 +4,7 @@
 
 {% block detail_content %}
 <div class="col-xs-6">
-<dl>
+<dl class="dl-horizontal">
     <dt>Price:</dt>
     <dd>{{ instance.price }}</dd>
     <dt>Description:</dt>
@@ -36,7 +36,7 @@
         {% for part in instance.parts %}
         <tr>
             <td>{{ part.ingredient }}</td>
-            <td>{{ part.quantity }}</td>
+            <td>{{ part.quantity|stringformat:'.3f' }} {{ part.ingredient.weight_unit.name.capitalize }}</td>
         </tr>
         {% endfor %}
     </tbody>

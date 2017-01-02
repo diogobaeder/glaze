@@ -15,7 +15,7 @@
         {% for recipe in object_list %}
         <tr>
             <td><a href="{{ recipe.get_absolute_url }}" title="{{ recipe.name }}">{{ recipe.name }}</a></td>
-            <td>{{ recipe.price }}</td>
+            <td>{{ recipe.price|stringformat:'.2f' }}</td>
             <td>
             {% if recipe.image %}
             {% thumbnail recipe.image "50x50" crop="center" as im %}

@@ -1,11 +1,11 @@
 {% extends 'recipes/base_detail.html' %}
 
 {% block detail_content %}
-<dl>
+<dl class="dl-horizontal">
     <dt>Kind:</dt>
-    <dd>{{ instance.kind_name }}</dd>
+    <dd>{{ instance.kind.name.capitalize }}</dd>
     <dt>Price:</dt>
-    <dd>{{ instance.price }}</dd>
+    <dd>{{ instance.price }}/{{ instance.weight_unit.name.capitalize }}</dd>
 </dl>
 {% endblock %}
 
