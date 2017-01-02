@@ -28,7 +28,9 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^recipes/', include('recipes.urls')),
     url(r'^accounts/', include('allauth.urls')),
-    url(r'^accounts/profile/$', views.profile),
+    url(r'^accounts/profile/$', views.ProfileView.as_view(), name='profile'),
+    url(r'^accounts/profile/update/$',
+        views.ProfileUpdateView.as_view(), name='profile-update'),
     url(r'^$', views.home),
 ]
 if settings.DEBUG or settings.TESTING:

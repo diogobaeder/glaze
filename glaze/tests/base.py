@@ -32,3 +32,6 @@ class GlazeTestCase(TestCase):
         copyfile(src, dst)
         with open(dst, 'rb') as f:
             yield f
+
+    def get_user(self):
+        return User.objects.get(pk=self.user.pk)
