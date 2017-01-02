@@ -44,15 +44,15 @@ class IngredientCreateTest(LoggedInRecipeTestCase):
     def test_adds_ingredient(self):
         self.client.post('/recipes/ingredient/add/', {
             'name': 'Salt',
-            'kind': Kind.BASE.value,
+            'kind': Kind.Base.value,
             'price': '12.34',
-            'weight_unit': WeightUnit.KG.value,
+            'weight_unit': WeightUnit.Kg.value,
         })
 
         ingredient = Ingredient.objects.get(pk=1)
 
         self.assertEqual(ingredient.name, 'Salt')
-        self.assertEqual(ingredient.kind, Kind.BASE)
+        self.assertEqual(ingredient.kind, Kind.Base)
         self.assertEqual(ingredient.price, Decimal('12.34'))
         self.assertEqual(ingredient.user, self.user)
 
@@ -61,9 +61,9 @@ class IngredientCreateTest(LoggedInRecipeTestCase):
 
         self.client.post('/recipes/ingredient/add/', {
             'name': 'Salt',
-            'kind': Kind.BASE.value,
+            'kind': Kind.Base.value,
             'price': '12.34',
-            'weight_unit': WeightUnit.KG.value,
+            'weight_unit': WeightUnit.Kg.value,
         })
 
         self.assertEqual(Ingredient.objects.count(), 1)
@@ -91,9 +91,9 @@ class IngredientUpdateTest(LoggedInRecipeTestCase):
 
         self.client.post('/recipes/ingredient/2/', {
             'name': 'Pepper 2',
-            'kind': Kind.BASE.value,
+            'kind': Kind.Base.value,
             'price': '12.34',
-            'weight_unit': WeightUnit.KG.value,
+            'weight_unit': WeightUnit.Kg.value,
         })
 
         ingredient = Ingredient.objects.get(pk=2)
@@ -104,9 +104,9 @@ class IngredientUpdateTest(LoggedInRecipeTestCase):
 
         response = self.client.post('/recipes/ingredient/1/', {
             'name': 'Pepper 2',
-            'kind': Kind.BASE.value,
+            'kind': Kind.Base.value,
             'price': '12.34',
-            'weight_unit': WeightUnit.KG.value,
+            'weight_unit': WeightUnit.Kg.value,
         })
 
         self.assertEqual(response.status_code, 404)

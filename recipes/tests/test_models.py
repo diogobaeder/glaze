@@ -16,8 +16,8 @@ class IngredientTest(RecipeTestCase):
             user=self.user,
             name='Sand',
             price=Decimal('1.99'),
-            kind=Kind.ADDITION,
-            weight_unit=WeightUnit.KG,
+            kind=Kind.Addition,
+            weight_unit=WeightUnit.Kg,
         )
 
         ingredient = Ingredient.objects.get(pk=1)
@@ -26,18 +26,18 @@ class IngredientTest(RecipeTestCase):
         self.assertEqual(str(ingredient), 'Sand')
         self.assertEqual(ingredient.name, 'Sand')
         self.assertEqual(ingredient.price, Decimal('1.99'))
-        self.assertEqual(ingredient.kind, Kind.ADDITION)
+        self.assertEqual(ingredient.kind, Kind.Addition)
         self.assertIsInstance(ingredient.created, datetime)
         self.assertIsInstance(ingredient.updated, datetime)
-        self.assertEqual(ingredient.weight_unit, WeightUnit.KG)
+        self.assertEqual(ingredient.weight_unit, WeightUnit.Kg)
 
     def test_cannot_create_ingredients_with_same_name(self):
         Ingredient.objects.create(
             user=self.user,
             name='Sand',
             price=Decimal('1.99'),
-            kind=Kind.ADDITION,
-            weight_unit=WeightUnit.KG,
+            kind=Kind.Addition,
+            weight_unit=WeightUnit.Kg,
         )
 
         with self.assertRaises(IntegrityError):
@@ -52,21 +52,16 @@ class IngredientTest(RecipeTestCase):
             user=self.user,
             name='Sand',
             price=Decimal('1.99'),
-            kind=Kind.ADDITION,
-            weight_unit=WeightUnit.KG,
+            kind=Kind.Addition,
+            weight_unit=WeightUnit.Kg,
         )
         Ingredient.objects.create(
             user=mommy.make(User),
             name='Sand',
             price=Decimal('1.99'),
-            kind=Kind.ADDITION,
-            weight_unit=WeightUnit.KG,
+            kind=Kind.Addition,
+            weight_unit=WeightUnit.Kg,
         )
-
-    def test_gets_kind_name(self):
-        instance = self.create_ingredient(kind=Kind.ADDITION)
-
-        self.assertEqual(instance.kind_name, 'Addition')
 
 
 class RecipeTest(RecipeTestCase):
@@ -156,3 +151,9 @@ class RecipeTest(RecipeTestCase):
             ingredient1.price * Decimal('0.2') +
             ingredient2.price * Decimal('0.3')
         ))
+
+
+class KindTest(RecipeTest):
+    def test_converts_to_pretty_name(self):
+        self.assertEqual(str(Kind.Base), 'Base')
+        self.assertEqual(str(Kind.Addition), 'Addition')

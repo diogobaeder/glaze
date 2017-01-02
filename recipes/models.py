@@ -7,14 +7,19 @@ from enumfields import EnumIntegerField
 from sorl.thumbnail import ImageField
 
 
-class Kind(IntEnum):
-    BASE = 0
-    ADDITION = 1
+class PrettyIntEnum(IntEnum):
+    def __str__(self):
+        return self.name
 
 
-class WeightUnit(IntEnum):
-    G = 0
-    KG = 1
+class Kind(PrettyIntEnum):
+    Base = 0
+    Addition = 1
+
+
+class WeightUnit(PrettyIntEnum):
+    g = 0
+    Kg = 1
 
 
 class UserBoundManager(models.Manager):
@@ -49,10 +54,6 @@ class Ingredient(UserBoundModel):
 
     path_prefix = 'ingredient'
     path_prefix_plural = 'ingredients'
-
-    @property
-    def kind_name(self):
-        return self.kind.name.capitalize()
 
 
 class Recipe(UserBoundModel):

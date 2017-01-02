@@ -8,13 +8,13 @@ class AdminTest(RecipeTestCase):
         self.client.force_login(self.user)
 
     def test_shows_ingredients(self):
-        instance = self.create_ingredient(kind=Kind.ADDITION)
+        instance = self.create_ingredient(kind=Kind.Addition)
 
         response = self.client.get('/admin/recipes/ingredient/')
 
         self.assertContains(response, instance.name)
         self.assertContains(response, instance.price)
-        self.assertContains(response, instance.kind_name)
+        self.assertContains(response, str(instance.kind))
 
     def test_shows_recipes(self):
         instance = self.create_recipe()
