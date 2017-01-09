@@ -33,3 +33,7 @@ setup:
 
 freeze:
 	pip freeze > requirements.txt
+
+messages:
+	python manage.py makemessages -a
+	python manage.py compilemessages

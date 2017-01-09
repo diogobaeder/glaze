@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.translation import ugettext as _
 
 from recipes.models import Ingredient, Recipe, RecipePart
 
@@ -8,6 +9,7 @@ def price(instance):
 
 
 price.admin_order_field = 'price'
+price.short_description = _('price')
 
 
 @admin.register(Ingredient)

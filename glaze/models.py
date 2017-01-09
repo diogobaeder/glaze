@@ -3,11 +3,17 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.urls import reverse
+from django.utils.translation import ugettext as _
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    currency = models.CharField(max_length=10, default='USD')
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, verbose_name=_('user'))
+    currency = models.CharField(_('currency'), max_length=10, default='USD')
+
+    class Meta:
+        verbose_name = _('Profile')
+        verbose_name_plural = _('Profiles')
 
     def get_absolute_url(self):
         return reverse('profile')

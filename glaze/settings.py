@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os
 
+from django.utils.translation import ugettext_lazy as _
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -173,6 +175,10 @@ AUTHENTICATION_BACKENDS = (
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
 LANGUAGE_CODE = 'en-US'
+LANGUAGES = [
+    ('en', _('English')),
+    ('pt-BR', _('Portuguese')),
+]
 
 TIME_ZONE = 'UTC'
 

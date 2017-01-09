@@ -4,6 +4,7 @@ from enum import IntEnum
 from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
+from django.utils.translation import ugettext as _
 from enumfields import EnumIntegerField
 from sorl.thumbnail import ImageField
 
@@ -35,11 +36,17 @@ class UserBoundManager(models.Manager):
         return self.filter(user=user)
 
 
-class UserBoundModel(models.Model):
+class DateBoundModel(models.Model):
+    created = models.DateTimeField(_('created at'), auto_now_add=True)
+    updated = models.DateTimeField(_('updated at'), auto_now=True)
+
+    class Meta:
+        abstract = True
+
+
+class UserBoundModel(DateBoundModel):
     user = models.ForeignKey(User)
-    name = models.CharField(max_length=200)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    name = models.CharField(_('name'), max_length=200)
 
     objects = UserBoundManager()
 
@@ -56,23 +63,32 @@ class UserBoundModel(models.Model):
 
 
 class Ingredient(UserBoundModel):
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    kind = EnumIntegerField(Kind)
-    weight_unit = EnumIntegerField(WeightUnit)
+    price = models.DecimalField(_('price'), max_digits=10, decimal_places=2)
+    kind = EnumIntegerField(Kind, verbose_name=_('kind'))
+    weight_unit = EnumIntegerField(WeightUnit, verbose_name=_('weight unit'))
 
     path_prefix = 'ingredient'
     path_prefix_plural = 'ingredients'
 
+    class Meta:
+        verbose_name = _('Ingredient')
+        verbose_name_plural = _('Ingredients')
+
 
 class Recipe(UserBoundModel):
-    ingredients = models.ManyToManyField(Ingredient, through='RecipePart')
-    description = models.TextField(blank=True, null=True)
-    image = ImageField(blank=True, null=True)
+    ingredients = models.ManyToManyField(
+        Ingredient, through='RecipePart', verbose_name=_('ingredients'))
+    description = models.TextField(_('description'), blank=True, null=True)
+    image = ImageField(_('image'), blank=True, null=True)
 
     path_prefix = 'recipe'
     path_prefix_plural = 'recipes'
 
     REFERENCE_WEIGHT_UNIT = WeightUnit.Kg
+
+    class Meta:
+        verbose_name = _('Recipe')
+        verbose_name_plural = _('Recipes')
 
     def add_part(self, ingredient, quantity):
         RecipePart.objects.create(
@@ -99,10 +115,14 @@ class Recipe(UserBoundModel):
         return price
 
 
-class RecipePart(models.Model):
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
-    ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
-    quantity = models.DecimalField(max_digits=10, decimal_places=4,
-                                   verbose_name='Amount')
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+class RecipePart(DateBoundModel):
+    recipe = models.ForeignKey(
+        Recipe, on_delete=models.CASCADE, verbose_name=_('recipe'))
+    ingredient = models.ForeignKey(
+        Ingredient, on_delete=models.CASCADE, verbose_name=_('ingredient'))
+    quantity = models.DecimalField(
+        _('amount'), max_digits=10, decimal_places=4)
+
+    class Meta:
+        verbose_name = _('Recipe part')
+        verbose_name_plural = _('Recipe parts')
