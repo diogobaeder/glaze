@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-09 06:13+0000\n"
+"POT-Creation-Date: 2017-01-09 07:15+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,11 +37,11 @@ msgstr "Perfil"
 msgid "Profiles"
 msgstr "Perfis"
 
-#: glaze/settings.py:179
+#: glaze/settings.py:180
 msgid "English"
 msgstr "Inglês"
 
-#: glaze/settings.py:180
+#: glaze/settings.py:181
 msgid "Portuguese"
 msgstr "Português"
 
@@ -54,15 +54,21 @@ msgid "Edit"
 msgstr "Editar"
 
 #: glaze/templates/glaze/profile_form.html:10
-#, fuzzy
-#| msgid "Profile"
 msgid "Editing Profile"
-msgstr "Perfil"
+msgstr "Editando Perfil"
 
-#: glaze/templates/glaze/profile_form.html:18
+#: glaze/templates/glaze/profile_form.html:19
 msgid "Submit"
 msgstr "Enviar"
 
-#: glaze/templates/glaze/profile_form.html:21
+#: glaze/templates/glaze/profile_form.html:22
 msgid "Back to details"
 msgstr "Voltar aos detalhes"
+
+#: glaze/templates/glaze/profile_form.html:28
+msgid "Language"
+msgstr "Língua"
+
+#: glaze/templates/glaze/profile_form.html:44
+msgid "Change"
+msgstr "Alterar"

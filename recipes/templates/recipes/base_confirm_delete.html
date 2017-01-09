@@ -6,7 +6,7 @@
 {% block title %}{% trans model_name %} | Glaze{% endblock %}
 
 {% block content %}
-<h1>{% trans "Are you sure you want to delete {{ model_name }}: {{ instance.name }}" %}?</h1>
+<h1>{% blocktrans %}Are you sure you want to delete {{ model_name }}: {{ instance.name }}?{% endblocktrans %}</h1>
 
 <form class="login form-horizontal" action="" method="POST">
   {% csrf_token %}

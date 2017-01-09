@@ -9,16 +9,40 @@
 {% block content %}
 <h1>{% trans "Editing Profile" %}: {{ user }}</h1>
 
-<form class="login form-horizontal" method="POST" action="">
-  <fieldset>
+<form class="login form-horizontal container" method="POST" action="">
+  <fieldset class="row">
     <legend>{% trans "Profile" %}</legend>
     {% csrf_token %}
     {% bootstrap_form form layout='horizontal' %}
   </fieldset>
-  <button class="btn btn-primary" type="submit">{% trans "Submit" %}</button>
-  <a class="btn btn-link"
-    href="{% url 'profile' %}"
-    title="{% trans "Back to details" %}">{% trans "Back to details" %}</a>
+  <div class="row">
+    <button class="btn btn-primary" type="submit">{% trans "Submit" %}</button>
+    <a class="btn btn-link"
+      href="{% url 'profile' %}"
+      title="{% trans "Back to details" %}">{% trans "Back to details" %}</a>
+  </div>
+</form>
+
+<form class="form-horizontal container" action="{% url 'set_language' %}" method="POST">{% csrf_token %}
+  <fieldset class="row">
+    <legend>{% trans "Language" %}</legend>
+    <input name="next" type="hidden" value="{{ request.get_full_path }}" />
+    <div class="form-group container">
+      <select class="form-control" name="language">
+        {% get_current_language as LANGUAGE_CODE %}
+        {% get_available_languages as LANGUAGES %}
+        {% get_language_info_list for LANGUAGES as languages %}
+        {% for language in languages %}
+        <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected="selected"{% endif %}>
+          {{ language.name_local }} ({{ language.code }})
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+  </fieldset>
+  <div class="row">
+    <button class="btn btn-primary" type="submit">{% trans "Change" %}</button>
+  </div>
 </form>
 {% endblock %}
 

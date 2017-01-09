@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-09 06:13+0000\n"
+"POT-Creation-Date: 2017-01-09 07:15+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -92,9 +92,9 @@ msgid "Recipe parts"
 msgstr "Partes da receita"
 
 #: recipes/templates/recipes/base_confirm_delete.html:9
-msgid "Are you sure you want to delete {{ model_name }}: {{ instance.name }}"
-msgstr ""
-"Tem certeza de que deseja deletar {{ model_name }}: {{ instance.name }}"
+#, python-format
+msgid "Are you sure you want to delete %(model_name)s: %(instance.name)s?"
+msgstr "Tem certeza de que deseja deletar %(model_name)s: %(instance.name)s?"
 
 #: recipes/templates/recipes/base_confirm_delete.html:14
 msgid "Cancel"
@@ -115,6 +115,10 @@ msgstr "Remover"
 #: recipes/templates/recipes/base_detail.html:15
 msgid "Back to list"
 msgstr "Voltar à lista"
+
+#: recipes/templates/recipes/base_form.html:9
+msgid "Editing"
+msgstr "Editando"
 
 #: recipes/templates/recipes/base_form.html:18
 msgid "Submit"
@@ -151,8 +155,9 @@ msgid "Description"
 msgstr "Descrição"
 
 #: recipes/templates/recipes/recipe_detail.html:23
-msgid "No image ({{ instance.image }})"
-msgstr "Nenhuma imagem ({{ instance.image }})"
+#: recipes/templates/recipes/recipe_list.html:33
+msgid "No image"
+msgstr "Sem imagem"
 
 #: recipes/templates/recipes/recipe_detail.html:33
 msgid "Amount"
@@ -172,8 +177,4 @@ msgstr "Remover esta parte"
 
 #: recipes/templates/recipes/recipe_list.html:13
 msgid "Image"
-msgstr "imagem"
-
-#: recipes/templates/recipes/recipe_list.html:33
-msgid "No image ({{ recipe.image }})"
-msgstr "Nenhuma imagem ({{ recipe.image }})"
+msgstr "Imagem"

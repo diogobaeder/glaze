@@ -20,7 +20,7 @@
     <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" />
     </a>
 {% empty %}
-    <p>{% trans "No image ({{ instance.image }})" %}</p>
+    <p>{% trans "No image" %} ({{ instance.image }})</p>
 {% endthumbnail %}
 {% endif %}
 </div>

@@ -31,6 +31,7 @@ urlpatterns = [
     url(r'^accounts/profile/$', views.ProfileView.as_view(), name='profile'),
     url(r'^accounts/profile/update/$',
         views.ProfileUpdateView.as_view(), name='profile-update'),
+    url(r'^i18n/', include('django.conf.urls.i18n')),
     url(r'^$', views.home),
 ]
 if settings.DEBUG or settings.TESTING:

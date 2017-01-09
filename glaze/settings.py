@@ -83,6 +83,7 @@ MIDDLEWARE = [
 
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -177,7 +178,7 @@ AUTHENTICATION_BACKENDS = (
 LANGUAGE_CODE = 'en-US'
 LANGUAGES = [
     ('en', _('English')),
-    ('pt-BR', _('Portuguese')),
+    ('pt-br', _('Portuguese')),
 ]
 
 TIME_ZONE = 'UTC'

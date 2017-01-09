@@ -6,7 +6,7 @@
 {% block title %}{% trans model_name %} | Glaze{% endblock %}
 
 {% block content %}
-<h1>Editing {% trans model_name %}: {{ form.instance.name }}</h1>
+<h1>{% trans "Editing" %} {{ model_name }}: {{ form.instance.name }}</h1>
 
 <form class="login form-horizontal" method="POST" action="" {% if form.image %}enctype="multipart/form-data"{% endif %}>
   <fieldset>
