@@ -1,18 +1,19 @@
 {% extends 'base.html' %}
 
+{% load i18n %}
 {% load bootstrap3 %}
 
-{% block title %}{{ model_name }} | Glaze{% endblock %}
+{% block title %}{% trans model_name %} | Glaze{% endblock %}
 
 {% block content %}
-<h1>Are you sure you want to delete {{ model_name }}: {{ instance.name }}?</h1>
+<h1>{% trans "Are you sure you want to delete {{ model_name }}: {{ instance.name }}" %}?</h1>
 
 <form class="login form-horizontal" action="" method="POST">
   {% csrf_token %}
   <input class="btn btn-default"
-    type="button" value="Cancel"
+    type="button" value="{% trans "Cancel" %}"
     onclick="window.history.go(-1);"/>
-  <input class="btn btn-danger" type="submit" value="Confirm"/>
+  <input class="btn btn-danger" type="submit" value="{% trans "Confirm" %}"/>
 </form>
 {% endblock %}
 

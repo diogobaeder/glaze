@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
 
-{% block bootstrap3_title %}Account | Glaze{% endblock %}
+{% load i18n %}
+
+{% block bootstrap3_title %}{% trans "Account" %} | Glaze{% endblock %}
 
 {% block content %}
-<h1>Account</h1>
+<h1>{% trans "Account" %}</h1>
 
 <p>{{ user.email }}</p>
 {% endblock %}

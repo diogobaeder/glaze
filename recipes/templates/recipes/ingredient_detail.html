@@ -1,10 +1,12 @@
 {% extends 'recipes/base_detail.html' %}
 
+{% load i18n %}
+
 {% block detail_content %}
 <dl class="dl-horizontal">
-    <dt>Kind:</dt>
+    <dt>{% trans "Kind" %}:</dt>
     <dd>{{ instance.kind }}</dd>
-    <dt>Price:</dt>
+    <dt>{% trans "Price" %}:</dt>
     <dd>{{ user.profile.currency }} {{ instance.price }}/{{ instance.weight_unit }}</dd>
 </dl>
 {% endblock %}

@@ -1,22 +1,24 @@
 {% extends 'base.html' %}
 
+{% load i18n %}
+
 {% load bootstrap3 %}
 
-{% block title %}Profile | Glaze{% endblock %}
+{% block title %}{% trans "Profile" %} | Glaze{% endblock %}
 
 {% block content %}
-<h1>Editing Profile: {{ user }}</h1>
+<h1>{% trans "Editing Profile" %}: {{ user }}</h1>
 
 <form class="login form-horizontal" method="POST" action="">
   <fieldset>
-    <legend>Profile</legend>
+    <legend>{% trans "Profile" %}</legend>
     {% csrf_token %}
     {% bootstrap_form form layout='horizontal' %}
   </fieldset>
-  <button class="btn btn-primary" type="submit">Submit</button>
+  <button class="btn btn-primary" type="submit">{% trans "Submit" %}</button>
   <a class="btn btn-link"
     href="{% url 'profile' %}"
-    title="Back to details">Back to details</a>
+    title="{% trans "Back to details" %}">{% trans "Back to details" %}</a>
 </form>
 {% endblock %}
 

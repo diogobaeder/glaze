@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-09 05:33+0000\n"
+"POT-Creation-Date: 2017-01-09 06:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,13 +20,16 @@ msgstr ""
 
 #: glaze/models.py:11
 msgid "user"
-msgstr ""
+msgstr "usuário"
 
 #: glaze/models.py:12
 msgid "currency"
 msgstr "moeda"
 
-#: glaze/models.py:15
+#: glaze/models.py:15 glaze/templates/glaze/profile.html:5
+#: glaze/templates/glaze/profile.html:8
+#: glaze/templates/glaze/profile_form.html:7
+#: glaze/templates/glaze/profile_form.html:14
 msgid "Profile"
 msgstr "Perfil"
 
@@ -36,8 +39,30 @@ msgstr "Perfis"
 
 #: glaze/settings.py:179
 msgid "English"
-msgstr ""
+msgstr "Inglês"
 
 #: glaze/settings.py:180
 msgid "Portuguese"
-msgstr ""
+msgstr "Português"
+
+#: glaze/templates/glaze/profile.html:11
+msgid "Currency"
+msgstr "Moeda"
+
+#: glaze/templates/glaze/profile.html:16
+msgid "Edit"
+msgstr "Editar"
+
+#: glaze/templates/glaze/profile_form.html:10
+#, fuzzy
+#| msgid "Profile"
+msgid "Editing Profile"
+msgstr "Perfil"
+
+#: glaze/templates/glaze/profile_form.html:18
+msgid "Submit"
+msgstr "Enviar"
+
+#: glaze/templates/glaze/profile_form.html:21
+msgid "Back to details"
+msgstr "Voltar aos detalhes"

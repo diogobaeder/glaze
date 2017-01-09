@@ -1,10 +1,11 @@
 {% extends 'recipes/base_form.html' %}
 
+{% load i18n %}
 {% load bootstrap3 %}
 
 {% block additional_fieldsets %}
 <fieldset class="form-inline recipe-parts">
-    <legend>Parts</legend>
+    <legend>{% trans "Parts" %}</legend>
     <div class="form-management">
     {{ recipe_part_form.management_form }}
     </div>
@@ -23,8 +24,8 @@ $(document).ready(function(){
         prefix: '{{ recipe_part_form.prefix }}',
         addCssClass: 'add-row btn btn-default',
         deleteCssClass: 'delete-row btn btn-warning',
-        addText: 'Add another',
-        deleteText: 'Remove this part'
+        addText: '{% trans "Add another" %}',
+        deleteText: '{% trans "Remove this part" %}'
     });
 });
 </script>

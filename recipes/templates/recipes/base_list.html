@@ -1,15 +1,17 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ model_name_plural }} | Glaze{% endblock %}
+{% load i18n %}
+
+{% block title %}{% trans model_name_plural %} | Glaze{% endblock %}
 
 {% block content %}
-<h1>{{ model_name_plural }}</h1>
+<h1>{% trans model_name_plural %}</h1>
 
-<p><a class="btn btn-primary" href="{% url path_prefix|stringformat:'s-add' %}">Add new</a></p>
+<p><a class="btn btn-primary" href="{% url path_prefix|stringformat:'s-add' %}">{% trans "Add new" %}</a></p>
 
 {% block list_content %}{% endblock %}
 
-<p><a class="btn btn-primary" href="{% url path_prefix|stringformat:'s-add' %}">Add new</a></p>
+<p><a class="btn btn-primary" href="{% url path_prefix|stringformat:'s-add' %}">{% trans "Add new" %}</a></p>
 
 {% endblock %}
 

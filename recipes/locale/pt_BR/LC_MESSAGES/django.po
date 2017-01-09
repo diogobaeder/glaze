@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-09 05:33+0000\n"
+"POT-Creation-Date: 2017-01-09 06:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,6 +23,7 @@ msgid "price"
 msgstr "preço"
 
 #: recipes/apps.py:7 recipes/models.py:91
+#: recipes/templates/recipes/recipe_list.html:26
 msgid "Recipes"
 msgstr "Receitas"
 
@@ -46,7 +47,7 @@ msgstr "tipo"
 msgid "weight unit"
 msgstr "unidade de peso"
 
-#: recipes/models.py:74
+#: recipes/models.py:74 recipes/templates/recipes/recipe_detail.html:32
 msgid "Ingredient"
 msgstr "Ingrediente"
 
@@ -55,8 +56,6 @@ msgid "Ingredients"
 msgstr "Ingredientes"
 
 #: recipes/models.py:80
-#, fuzzy
-#| msgid "Ingredients"
 msgid "ingredients"
 msgstr "Ingredientes"
 
@@ -73,14 +72,10 @@ msgid "Recipe"
 msgstr "Receita"
 
 #: recipes/models.py:120
-#, fuzzy
-#| msgid "Recipes"
 msgid "recipe"
 msgstr "Receitas"
 
 #: recipes/models.py:122
-#, fuzzy
-#| msgid "Ingredient"
 msgid "ingredient"
 msgstr "Ingrediente"
 
@@ -95,3 +90,90 @@ msgstr "Parte da receita"
 #: recipes/models.py:128
 msgid "Recipe parts"
 msgstr "Partes da receita"
+
+#: recipes/templates/recipes/base_confirm_delete.html:9
+msgid "Are you sure you want to delete {{ model_name }}: {{ instance.name }}"
+msgstr ""
+"Tem certeza de que deseja deletar {{ model_name }}: {{ instance.name }}"
+
+#: recipes/templates/recipes/base_confirm_delete.html:14
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: recipes/templates/recipes/base_confirm_delete.html:16
+msgid "Confirm"
+msgstr "Confirmar"
+
+#: recipes/templates/recipes/base_detail.html:13
+msgid "Edit"
+msgstr "Editar"
+
+#: recipes/templates/recipes/base_detail.html:14
+msgid "Delete"
+msgstr "Remover"
+
+#: recipes/templates/recipes/base_detail.html:15
+msgid "Back to list"
+msgstr "Voltar à lista"
+
+#: recipes/templates/recipes/base_form.html:18
+msgid "Submit"
+msgstr "Enviar"
+
+#: recipes/templates/recipes/base_form.html:22
+msgid "Back to details"
+msgstr "Voltar aos detalhes"
+
+#: recipes/templates/recipes/base_list.html:10
+#: recipes/templates/recipes/base_list.html:14
+msgid "Add new"
+msgstr "Adicionar novo(a)"
+
+#: recipes/templates/recipes/ingredient_detail.html:7
+#: recipes/templates/recipes/ingredient_list.html:10
+msgid "Kind"
+msgstr "Tipo"
+
+#: recipes/templates/recipes/ingredient_detail.html:9
+#: recipes/templates/recipes/ingredient_list.html:11
+#: recipes/templates/recipes/recipe_detail.html:9
+#: recipes/templates/recipes/recipe_list.html:12
+msgid "Price"
+msgstr "Preço"
+
+#: recipes/templates/recipes/ingredient_list.html:9
+#: recipes/templates/recipes/recipe_list.html:11
+msgid "Name"
+msgstr "Nome"
+
+#: recipes/templates/recipes/recipe_detail.html:11
+msgid "Description"
+msgstr "Descrição"
+
+#: recipes/templates/recipes/recipe_detail.html:23
+msgid "No image ({{ instance.image }})"
+msgstr "Nenhuma imagem ({{ instance.image }})"
+
+#: recipes/templates/recipes/recipe_detail.html:33
+msgid "Amount"
+msgstr "Quantidade"
+
+#: recipes/templates/recipes/recipe_form.html:8
+msgid "Parts"
+msgstr "Partes"
+
+#: recipes/templates/recipes/recipe_form.html:27
+msgid "Add another"
+msgstr "Adicionar outro(a)"
+
+#: recipes/templates/recipes/recipe_form.html:28
+msgid "Remove this part"
+msgstr "Remover esta parte"
+
+#: recipes/templates/recipes/recipe_list.html:13
+msgid "Image"
+msgstr "imagem"
+
+#: recipes/templates/recipes/recipe_list.html:33
+msgid "No image ({{ recipe.image }})"
+msgstr "Nenhuma imagem ({{ recipe.image }})"

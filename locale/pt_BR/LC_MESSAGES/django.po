@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-09 05:33+0000\n"
+"POT-Creation-Date: 2017-01-09 06:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -61,3 +61,31 @@ msgstr "Sair"
 #: templates/account/logout.html:10
 msgid "Are you sure you want to sign out?"
 msgstr "Tem certeza de que deseja sair?"
+
+#: templates/base.html:22
+msgid "Toggle navigation"
+msgstr "Ativar/desativar navegação"
+
+#: templates/base.html:32
+msgid "Recipes"
+msgstr "Receitas"
+
+#: templates/base.html:33
+msgid "Ingredients"
+msgstr "Ingredientes"
+
+#: templates/base.html:40
+msgid "Profile"
+msgstr "Perfil"
+
+#: templates/base.html:41
+msgid "Logout"
+msgstr "Sair"
+
+#: templates/base.html:43
+msgid "Login"
+msgstr "Entrar"
+
+#: templates/profile.html:5 templates/profile.html:8
+msgid "Account"
+msgstr "Conta"
