@@ -39,9 +39,9 @@
         {% for part in instance.parts %}
         <tr>
             <td><a href="{{ part.ingredient.get_absolute_url }}" title="{{ part.ingredient.name }}">{{ part.ingredient.name }}</a></td>
-            <td>{{ part.ingredient.kind }}</td>
+            <td>{% trans part.ingredient.kind_string %}</td>
             <td>{{ part.percentage|floatformat }}%</td>
-            <td>{{ user.profile.currency }} {{ part.relative_price|floatformat:2 }}/Kg</td>
+            <td>{{ user.profile.currency }} {{ part.relative_price|floatformat:2 }}</td>
         </tr>
         {% endfor %}
     </tbody>

@@ -15,12 +15,16 @@ PERCENT = Decimal('100')
 
 class PrettyIntEnum(IntEnum):
     def __str__(self):
-        return self.name
+        return _(self.name)
 
 
 class Kind(PrettyIntEnum):
     Base = 0
     Addition = 1
+
+
+_('Base')
+_('Addition')
 
 
 class WeightUnit(PrettyIntEnum):
@@ -81,6 +85,10 @@ class Ingredient(UserBoundModel):
         verbose_name = _('Ingredient')
         verbose_name_plural = _('Ingredients')
         ordering = ['name']
+
+    @property
+    def kind_string(self):
+        return str(self.kind)
 
 
 class Recipe(UserBoundModel):

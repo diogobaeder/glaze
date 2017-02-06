@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-06 04:12+0000\n"
+"POT-Creation-Date: 2017-02-06 12:14+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: recipes/admin.py:12 recipes/models.py:73
+#: recipes/admin.py:12 recipes/models.py:77
 #: recipes/templates/recipes/ingredient_detail.html:9
 #: recipes/templates/recipes/ingredient_list.html:11
 #: recipes/templates/recipes/recipe_detail.html:9
@@ -26,70 +26,72 @@ msgstr ""
 msgid "Price"
 msgstr "Preço"
 
-#: recipes/apps.py:7 recipes/models.py:97
+#: recipes/apps.py:7 recipes/models.py:105
 #: recipes/templates/recipes/recipe_list.html:26
 msgid "Recipes"
 msgstr "Receitas"
 
-#: recipes/models.py:47
-#, fuzzy
-#| msgid "created at"
+#: recipes/models.py:26
+msgid "Base"
+msgstr "Base"
+
+#: recipes/models.py:27
+msgid "Addition"
+msgstr "Adição"
+
+#: recipes/models.py:51
 msgid "Created at"
-msgstr "criado em"
+msgstr "Criado em"
 
-#: recipes/models.py:48
-#, fuzzy
-#| msgid "updated at"
+#: recipes/models.py:52
 msgid "Updated at"
-msgstr "atualizado em"
+msgstr "Atualizado em"
 
-#: recipes/models.py:56 recipes/templates/recipes/ingredient_list.html:9
+#: recipes/models.py:60 recipes/templates/recipes/ingredient_list.html:9
 #: recipes/templates/recipes/recipe_list.html:11
 msgid "Name"
 msgstr "Nome"
 
-#: recipes/models.py:74 recipes/templates/recipes/ingredient_detail.html:7
+#: recipes/models.py:78 recipes/templates/recipes/ingredient_detail.html:7
 #: recipes/templates/recipes/ingredient_list.html:10
 #: recipes/templates/recipes/recipe_detail.html:33
 msgid "Kind"
 msgstr "Tipo"
 
-#: recipes/models.py:75
-#, fuzzy
-#| msgid "weight unit"
+#: recipes/models.py:79
 msgid "Weight unit"
-msgstr "unidade de peso"
+msgstr "Unidade de peso"
 
-#: recipes/models.py:81 recipes/models.py:133
+#: recipes/models.py:85 recipes/models.py:141
 #: recipes/templates/recipes/recipe_detail.html:32
 msgid "Ingredient"
 msgstr "Ingrediente"
 
-#: recipes/models.py:82 recipes/models.py:88
+#: recipes/models.py:86 recipes/models.py:96
 msgid "Ingredients"
 msgstr "Ingredientes"
 
-#: recipes/models.py:89 recipes/templates/recipes/recipe_detail.html:11
+#: recipes/models.py:97 recipes/templates/recipes/recipe_detail.html:11
 msgid "Description"
 msgstr "Descrição"
 
-#: recipes/models.py:90 recipes/templates/recipes/recipe_list.html:13
+#: recipes/models.py:98 recipes/templates/recipes/recipe_list.html:13
 msgid "Image"
 msgstr "Imagem"
 
-#: recipes/models.py:96 recipes/models.py:131
+#: recipes/models.py:104 recipes/models.py:139
 msgid "Recipe"
 msgstr "Receita"
 
-#: recipes/models.py:135 recipes/templates/recipes/recipe_detail.html:34
+#: recipes/models.py:143 recipes/templates/recipes/recipe_detail.html:34
 msgid "Percentage"
 msgstr "Porcentagem"
 
-#: recipes/models.py:146
+#: recipes/models.py:154
 msgid "Recipe part"
 msgstr "Parte da receita"
 
-#: recipes/models.py:147
+#: recipes/models.py:155
 msgid "Recipe parts"
 msgstr "Partes da receita"
 
