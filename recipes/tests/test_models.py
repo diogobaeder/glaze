@@ -116,22 +116,30 @@ class RecipeTest(RecipeTestCase):
 
         self.assertEqual(response.status_code, 200)
 
-    def test_contains_ingredients_in_certain_quantities(self):
-        ingredient1 = self.create_ingredient()
-        ingredient2 = self.create_ingredient()
+    def test_contains_ingredients_in_certain_percentages(self):
+        ingredient1 = self.create_ingredient(
+            price=Decimal('1.23'), weight_unit=WeightUnit.g)
+        ingredient2 = self.create_ingredient(
+            price=Decimal('2.34'), weight_unit=WeightUnit.Kg)
         recipe = Recipe.objects.create(
             user=self.user,
             name='Interesting Yellow'
         )
 
-        recipe.add_part(ingredient1, quantity=Decimal('0.2'))
-        recipe.add_part(ingredient2, quantity=Decimal('0.3'))
+        recipe.add_part(ingredient1, percentage=Decimal('20'))
+        recipe.add_part(ingredient2, percentage=Decimal('30'))
 
         parts = recipe.parts
         self.assertEqual(parts[0].ingredient, ingredient1)
         self.assertEqual(parts[1].ingredient, ingredient2)
-        self.assertEqual(parts[0].quantity, Decimal('0.2'))
-        self.assertEqual(parts[1].quantity, Decimal('0.3'))
+        self.assertEqual(parts[0].percentage, Decimal('20'))
+        self.assertEqual(parts[1].percentage, Decimal('30'))
+        self.assertEqual(
+            parts[0].relative_price,
+            Decimal('1.23') * Decimal('1000') * Decimal('20') / Decimal('100'))
+        self.assertEqual(
+            parts[1].relative_price,
+            Decimal('2.34') * Decimal('1') * Decimal('30') / Decimal('100'))
 
     def test_calculates_price_based_on_ingredients(self):
         ingredient1 = self.create_ingredient(
@@ -143,13 +151,13 @@ class RecipeTest(RecipeTestCase):
             name='Interesting Yellow'
         )
 
-        recipe.add_part(ingredient1, quantity=Decimal('0.2'))
-        recipe.add_part(ingredient2, quantity=Decimal('0.3'))
+        recipe.add_part(ingredient1, percentage=Decimal('20'))
+        recipe.add_part(ingredient2, percentage=Decimal('30'))
 
         self.assertEqual(recipe.price, (
-            Decimal('1.23') * Decimal('1000') * Decimal('0.2') +
-            Decimal('2.34') * Decimal('1') * Decimal('0.3')
-        ))
+            Decimal('1.23') * Decimal('1000') * Decimal('20') +
+            Decimal('2.34') * Decimal('1') * Decimal('30')
+        ) / (Decimal('20') + Decimal('30')))
 
     def test_uses_correct_multiplication_for_price(self):
         """Just a sanity check test."""
@@ -162,10 +170,18 @@ class RecipeTest(RecipeTestCase):
             name='Interesting Yellow'
         )
 
-        recipe.add_part(ingredient1, quantity=Decimal('1'))
-        recipe.add_part(ingredient2, quantity=Decimal('1'))
+        recipe.add_part(ingredient1, percentage=Decimal('50'))
+        recipe.add_part(ingredient2, percentage=Decimal('50'))
 
-        self.assertEqual(recipe.price, Decimal('100'))
+        self.assertEqual(recipe.price, Decimal('50.00'))
+
+    def test_calculates_price_for_no_parts(self):
+        recipe = Recipe.objects.create(
+            user=self.user,
+            name='Null Recipe',
+        )
+
+        self.assertEqual(recipe.price, Decimal('0'))
 
 
 class KindTest(RecipeTestCase):

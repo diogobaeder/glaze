@@ -9,6 +9,10 @@ from enumfields import EnumIntegerField
 from sorl.thumbnail import ImageField
 
 
+ZERO = Decimal('0')
+PERCENT = Decimal('100')
+
+
 class PrettyIntEnum(IntEnum):
     def __str__(self):
         return self.name
@@ -29,6 +33,9 @@ class WeightUnit(PrettyIntEnum):
         if self is self.g and weight_unit is self.Kg:
             return Decimal('0.001')
         return Decimal('1')
+
+
+REFERENCE_WEIGHT_UNIT = WeightUnit.Kg
 
 
 class UserBoundManager(models.Manager):
@@ -84,17 +91,15 @@ class Recipe(UserBoundModel):
     path_prefix = 'recipe'
     path_prefix_plural = 'recipes'
 
-    REFERENCE_WEIGHT_UNIT = WeightUnit.Kg
-
     class Meta:
         verbose_name = _('Recipe')
         verbose_name_plural = _('Recipes')
 
-    def add_part(self, ingredient, quantity):
+    def add_part(self, ingredient, percentage):
         RecipePart.objects.create(
             recipe=self,
             ingredient=ingredient,
-            quantity=quantity,
+            percentage=percentage,
         )
 
     @property
@@ -103,16 +108,21 @@ class Recipe(UserBoundModel):
 
     @property
     def price(self):
-        price = Decimal('0')
+        price = ZERO
+        final_percentage = ZERO
 
         for part in self.parts:
             i = part.ingredient
             price += (
-                i.price * part.quantity
-                * self.REFERENCE_WEIGHT_UNIT.weighted_in(i.weight_unit)
+                i.price * part.percentage
+                * REFERENCE_WEIGHT_UNIT.weighted_in(i.weight_unit)
             )
+            final_percentage += part.percentage
 
-        return price
+        if final_percentage == ZERO:
+            return ZERO
+
+        return price / final_percentage
 
 
 class RecipePart(DateBoundModel):
@@ -120,8 +130,16 @@ class RecipePart(DateBoundModel):
         Recipe, on_delete=models.CASCADE, verbose_name=_('recipe'))
     ingredient = models.ForeignKey(
         Ingredient, on_delete=models.CASCADE, verbose_name=_('ingredient'))
-    quantity = models.DecimalField(
-        _('amount'), max_digits=10, decimal_places=4)
+    percentage = models.DecimalField(
+        _('percentage'), max_digits=10, decimal_places=4)
+
+    @property
+    def relative_price(self):
+        return (
+            self.ingredient.price * self.percentage *
+            REFERENCE_WEIGHT_UNIT.weighted_in(self.ingredient.weight_unit)
+            / PERCENT
+        )
 
     class Meta:
         verbose_name = _('Recipe part')

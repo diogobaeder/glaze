@@ -7,7 +7,7 @@
 <div class="col-xs-6">
 <dl class="dl-horizontal">
     <dt>{% trans "Price" %}:</dt>
-    <dd>{{ user.profile.currency }} {{ instance.price|stringformat:'.2f' }}</dd>
+    <dd>{{ user.profile.currency }} {{ instance.price|floatformat:2 }}/Kg</dd>
     <dt>{% trans "Description" %}:</dt>
     <dd>{{ instance.description }}</dd>
 </dl>
@@ -30,14 +30,17 @@
     <thead>
         <tr>
             <th>{% trans "Ingredient" %}</th>
-            <th>{% trans "Amount" %}</th>
+            <th>{% trans "Percentage" %}</th>
+            <th>{% trans "Relative Price" %}</th>
         </tr>
     </thead>
     <tbody>
         {% for part in instance.parts %}
         <tr>
+            <td><a href="{{ part.ingredient.get_absolute_url }}" title="{{ part.ingredient.name }}">{{ part.ingredient.name }}</a></td>
             <td>{{ part.ingredient }}</td>
-            <td>{{ part.quantity|stringformat:'.3f' }}{{ part.ingredient.weight_unit }}</td>
+            <td>{{ part.percentage|floatformat }}%</td>
+            <td>{{ user.profile.currency }} {{ part.relative_price|floatformat:2 }}/Kg</td>
         </tr>
         {% endfor %}
     </tbody>

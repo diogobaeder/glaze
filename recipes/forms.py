@@ -31,4 +31,4 @@ class RecipeForm(UserBoundForm):
 
 
 RecipePartFormset = inlineformset_factory(
-    Recipe, RecipePart, fields=['ingredient', 'quantity'], extra=5)
+    Recipe, RecipePart, fields=['ingredient', 'percentage'], extra=5)
