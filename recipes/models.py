@@ -44,8 +44,8 @@ class UserBoundManager(models.Manager):
 
 
 class DateBoundModel(models.Model):
-    created = models.DateTimeField(_('created at'), auto_now_add=True)
-    updated = models.DateTimeField(_('updated at'), auto_now=True)
+    created = models.DateTimeField(_('Created at'), auto_now_add=True)
+    updated = models.DateTimeField(_('Updated at'), auto_now=True)
 
     class Meta:
         abstract = True
@@ -53,7 +53,7 @@ class DateBoundModel(models.Model):
 
 class UserBoundModel(DateBoundModel):
     user = models.ForeignKey(User)
-    name = models.CharField(_('name'), max_length=200)
+    name = models.CharField(_('Name'), max_length=200)
 
     objects = UserBoundManager()
 
@@ -70,9 +70,9 @@ class UserBoundModel(DateBoundModel):
 
 
 class Ingredient(UserBoundModel):
-    price = models.DecimalField(_('price'), max_digits=10, decimal_places=2)
-    kind = EnumIntegerField(Kind, verbose_name=_('kind'))
-    weight_unit = EnumIntegerField(WeightUnit, verbose_name=_('weight unit'))
+    price = models.DecimalField(_('Price'), max_digits=10, decimal_places=2)
+    kind = EnumIntegerField(Kind, verbose_name=_('Kind'))
+    weight_unit = EnumIntegerField(WeightUnit, verbose_name=_('Weight unit'))
 
     path_prefix = 'ingredient'
     path_prefix_plural = 'ingredients'
@@ -80,13 +80,14 @@ class Ingredient(UserBoundModel):
     class Meta:
         verbose_name = _('Ingredient')
         verbose_name_plural = _('Ingredients')
+        ordering = ['name']
 
 
 class Recipe(UserBoundModel):
     ingredients = models.ManyToManyField(
-        Ingredient, through='RecipePart', verbose_name=_('ingredients'))
-    description = models.TextField(_('description'), blank=True, null=True)
-    image = ImageField(_('image'), blank=True, null=True)
+        Ingredient, through='RecipePart', verbose_name=_('Ingredients'))
+    description = models.TextField(_('Description'), blank=True, null=True)
+    image = ImageField(_('Image'), blank=True, null=True)
 
     path_prefix = 'recipe'
     path_prefix_plural = 'recipes'
@@ -127,11 +128,11 @@ class Recipe(UserBoundModel):
 
 class RecipePart(DateBoundModel):
     recipe = models.ForeignKey(
-        Recipe, on_delete=models.CASCADE, verbose_name=_('recipe'))
+        Recipe, on_delete=models.CASCADE, verbose_name=_('Recipe'))
     ingredient = models.ForeignKey(
-        Ingredient, on_delete=models.CASCADE, verbose_name=_('ingredient'))
+        Ingredient, on_delete=models.CASCADE, verbose_name=_('Ingredient'))
     percentage = models.DecimalField(
-        _('percentage'), max_digits=10, decimal_places=4)
+        _('Percentage'), max_digits=10, decimal_places=4)
 
     @property
     def relative_price(self):

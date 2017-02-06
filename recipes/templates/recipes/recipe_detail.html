@@ -30,6 +30,7 @@
     <thead>
         <tr>
             <th>{% trans "Ingredient" %}</th>
+            <th>{% trans "Kind" %}</th>
             <th>{% trans "Percentage" %}</th>
             <th>{% trans "Relative Price" %}</th>
         </tr>
@@ -38,7 +39,7 @@
         {% for part in instance.parts %}
         <tr>
             <td><a href="{{ part.ingredient.get_absolute_url }}" title="{{ part.ingredient.name }}">{{ part.ingredient.name }}</a></td>
-            <td>{{ part.ingredient }}</td>
+            <td>{{ part.ingredient.kind }}</td>
             <td>{{ part.percentage|floatformat }}%</td>
             <td>{{ user.profile.currency }} {{ part.relative_price|floatformat:2 }}/Kg</td>
         </tr>

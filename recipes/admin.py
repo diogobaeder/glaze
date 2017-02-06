@@ -9,7 +9,7 @@ def price(instance):
 
 
 price.admin_order_field = 'price'
-price.short_description = _('price')
+price.short_description = _('Price')
 
 
 @admin.register(Ingredient)
