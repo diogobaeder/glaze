@@ -52,6 +52,7 @@ coverage.xml
 # Django stuff:
 *.log
 local_settings.py
+prod_settings.py
 db.sqlite3
 uploads/
 
@@ -89,3 +90,8 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
