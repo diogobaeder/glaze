@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'bootstrap3',
     'debug_toolbar',
     'sorl.thumbnail',
+    'storages',
 
     'allauth',
     'allauth.account',
