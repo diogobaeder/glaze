@@ -37,3 +37,6 @@ freeze:
 messages:
 	python manage.py makemessages -a
 	python manage.py compilemessages
+
+ignore-on-deploy:
+	grep -v 'prod_settings' .gitignore > .ebignore
