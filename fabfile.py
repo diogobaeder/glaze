@@ -9,9 +9,7 @@ SERVICE = 'webfaction'
 DB_USER = prod_settings.DATABASES['default']['USER']
 DB_PASS = prod_settings.DATABASES['default']['PASSWORD']
 DB_NAME = prod_settings.DATABASES['default']['NAME']
-
-
-client = None
+DB_TYPE = 'postgresql'
 
 
 class Caller:
@@ -31,19 +29,45 @@ class AutoWebFactionClient(WebFactionAPI):
         return Caller(self.server, self.session_id, method_name)
 
 
-def get_client() -> WebFactionAPI:
-    global client
+class Maestro:
+    def __init__(self, service, username, password):
+        self.service = service
+        self.username = username
+        self.password = password
+        self.client = self._create_client()
 
-    if client is None:
-        password = keyring.get_password(SERVICE, USERNAME)
-        client = AutoWebFactionClient(username=USERNAME, password=password)
+    def _create_client(self) -> AutoWebFactionClient:
+        client = AutoWebFactionClient(
+            username=self.username, password=self.password)
         client.connect()
 
-    return client
+        return client
+
+    @property
+    def db(self):
+        return Database(self.client)
 
 
-def create_db():
-    client = get_client()
-    if not any(db['name'] == DB_NAME for db in client.list_dbs()):
-        client.create_db_user(DB_USER, DB_PASS, prod_settings.DB_TYPE)
-        client.create_db(DB_NAME, prod_settings.DB_TYPE, DB_PASS, DB_USER)
+class Database:
+    def __init__(self, client: AutoWebFactionClient):
+        self.client = client
+
+    def create_db(self, name, db_type, user, password):
+        if not self._has_user(user):
+            self.client.create_db_user(user, password, db_type)
+        if not self._has_db(name):
+            self.client.create_db(name, db_type, password, user)
+
+    def _has_user(self, user):
+        return any(
+            db['username'] == user for db in self.client.list_db_users())
+
+    def _has_db(self, name):
+        return any(db['name'] == name for db in self.client.list_dbs())
+
+
+def create_website():
+    password = keyring.get_password(SERVICE, USERNAME)
+    maestro = Maestro(SERVICE, USERNAME, password)
+
+    maestro.db.create_db(DB_NAME, DB_TYPE, DB_USER, DB_PASS)
