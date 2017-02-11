@@ -15,26 +15,41 @@ What to install/configure:
 
 """
 
-from os.path import expanduser
+from os.path import expanduser, join
 from uuid import uuid4
 
 import keyring
 from fabric import colors
-from fabric.api import task, run
+from fabric.api import (
+    cd, env, prefix, put, run, shell_env, task, warn_only
+)
 from wfcli import WebFactionAPI, WebfactionWebsiteToSsl
 
 from glaze import prod_settings
 
 
-PYTHON_VERSION = '3.5'
-PROJECT_NAME = 'glaze'
-PARENT_DOMAIN = 'diogobaeder.com.br'
-USERNAME = 'diogobaeder'
-SERVICE = 'webfaction'
-DB_USER = prod_settings.DATABASES['default']['USER']
-DB_PASS = prod_settings.DATABASES['default']['PASSWORD']
-DB_NAME = prod_settings.DATABASES['default']['NAME']
-DB_TYPE = 'postgresql'
+env.use_ssh_config = True
+env.hosts = ['webfaction']
+env.python_version = '3.5'
+env.project = 'glaze'
+env.parent_domain = 'diogobaeder.com.br'
+env.user = 'diogobaeder'
+env.password = keyring.get_password('webfaction', env.user)
+env.db_user = prod_settings.DATABASES['default']['USER']
+env.db_pass = prod_settings.DATABASES['default']['PASSWORD']
+env.db_name = prod_settings.DATABASES['default']['NAME']
+env.db_type = 'postgresql'
+env.home_dir = '/home/diogobaeder'
+env.key_filename = '/home/diogobaeder/.ssh/id_rsa.pub'
+env.webapps = '/home/diogobaeder/webapps'
+env.repository = 'git@github.com:diogobaeder/glaze.git'
+env.project_dir = join(env.webapps, env.project)
+env.django_settings_module = 'glaze.prod_settings'
+
+
+def info(*texts):
+    text = ' '.join(texts)
+    print(colors.magenta(text))
 
 
 class Caller:
@@ -60,15 +75,12 @@ class WebFactionClient(WebFactionAPI):
 
 
 class Maestro:
-    def __init__(self, service, username, password):
-        self.service = service
-        self.username = username
-        self.password = password
+    def __init__(self):
         self.client = self._create_client()
 
     def _create_client(self) -> WebFactionClient:
         client = WebFactionClient(
-            username=self.username, password=self.password)
+            username=env.user, password=env.password)
         client.connect()
 
         return client
@@ -89,6 +101,14 @@ class Maestro:
     def ssh(self):
         return SSH(self.client)
 
+    @property
+    def git(self):
+        return Git(self.client)
+
+    @property
+    def project(self):
+        return Project(self.client)
+
 
 class Component:
     def __init__(self, client: WebFactionClient):
@@ -96,16 +116,17 @@ class Component:
 
 
 class Domain(Component):
-    def create_domain(self, domain, subdomain):
-        self.client.create_domain(domain, [subdomain])
+    def create_domain(self):
+        self.client.create_domain(env.parent_domain, [env.project])
 
 
 class Database(Component):
-    def create_db(self, name, db_type, user, password):
-        if not self._has_user(user):
-            self.client.create_db_user(user, password, db_type)
-        if not self._has_db(name):
-            self.client.create_db(name, db_type, password, user)
+    def create_db(self):
+        if not self._has_user(env.db_user):
+            self.client.create_db_user(env.db_user, env.db_pass, env.db_type)
+        if not self._has_db(env.db_name):
+            self.client.create_db(
+                env.db_name, env.db_type, env.db_pass, env.db_user)
 
     def _has_user(self, user):
         return any(
@@ -118,24 +139,36 @@ class Database(Component):
 class Applications(Component):
     def prepare_apps(self):
         self.create_app('git', 'git')
-        self.client.command(
-            'easy_install-{} --upgrade pip'.format(PYTHON_VERSION))
-        self.pip('virtualenv', 'virtualenvwrapper', 'circus', 'chaussette')
+        run('mkdir -p {}'.format(join(env.home_dir, 'bin')))
+        run('mkdir -p {}'.format(join(env.home_dir, 'tmp')))
+        run('easy_install-{} --upgrade pip'.format(env.python_version))
+        self.install('virtualenv', 'virtualenvwrapper', 'circus', 'chaussette')
+        app = self.create_app(env.project, 'custom_app_with_port')
+        self.create_static('static')
+        self.create_static('uploads')
 
-    def pip(self, *packages):
-        self.client.command('pip{} install --user {}'.format(
-            PYTHON_VERSION, ' '.join(packages)))
+    def create_static(self, static_name):
+        path = join(env.project_dir, static_name)
+        run('mkdir -p {}'.format(path))
+        self.create_app(
+            '{}_{}'.format(env.project, static_name), 'symlink_static_only',
+            path)
 
-    def create_app(self, app_name, app_type):
+    def install(self, *packages):
+        run('pip{} install --user -U {}'.format(
+            env.python_version, ' '.join(packages)))
+
+    def create_app(self, app_name, app_type, extra_info=''):
         info('creating app', app_name)
         if app_name not in self.client.list_apps():
-            self.client.create_app(app_name, app_type)
+            return self.client.create_app(
+                app_name, app_type, extra_info=extra_info)
 
 
 class SSH(Component):
-    def ensure_authorized_key(self, public_key_path):
+    def ensure_authorized_key(self):
         info('ensuring authorized key is set')
-        with open(public_key_path, encoding='utf-8') as f:
+        with open(env.key_filename, encoding='utf-8') as f:
             key = f.read().strip()
 
         path = '/tmp/{}'.format(uuid4())
@@ -148,14 +181,63 @@ class SSH(Component):
         self.client.command('rm {}'.format(path))
 
 
+class Git(Component):
+    def prepare_working_tree(self):
+        if not self._has_working_tree():
+            self.git(
+                'init .',
+                'remote add origin {}'.format(env.repository),
+                'pull --ff origin master',
+            )
+
+    def git(self, *commands):
+        with cd(env.project_dir):
+            for command in commands:
+                run('git {}'.format(command))
+
+    def _has_working_tree(self):
+        with cd(env.project_dir), warn_only():
+            result = run('test -d .git')
+        return not result.failed
+
+
+class Project(Component):
+    def prepare_project(self, load_users=False):
+        settings_module_path = '{}.py'.format(
+            env.django_settings_module.replace('.', '/'))
+        if not self._has_virtualenv():
+            self.create_virtualenv()
+
+            with shell_env(TMPDIR='~/tmp'):
+                self.env_run('.env/bin/pip install -r requirements.txt')
+            put(settings_module_path,
+                join(env.project_dir, settings_module_path))
+            self.manage('migrate')
+            self.manage('collectstatic')
+            if load_users:
+                self.manage('loaddata users.json')
+
+    def create_virtualenv(self):
+        with cd(env.project_dir):
+            run('virtualenv .env')
+
+    def manage(self, command):
+        with shell_env(DJANGO_SETTINGS_MODULE=env.django_settings_module):
+            self.env_run('.env/bin/python manage.py {}'.format(command))
+
+    def env_run(self, command):
+        with cd(env.project_dir), prefix('source .env/bin/activate'):
+            run(command)
+
+    def _has_virtualenv(self):
+        with cd(env.project_dir), warn_only():
+            result = run('test -d .env')
+        return not result.failed
+
+
 def step(*texts):
     text = ' '.join(texts)
     print(colors.blue(text, True))
-
-
-def info(*texts):
-    text = ' '.join(texts)
-    print(colors.magenta(text))
 
 
 def success(*texts):
@@ -165,19 +247,24 @@ def success(*texts):
 
 @task
 def create_website():
-    password = keyring.get_password(SERVICE, USERNAME)
-    maestro = Maestro(SERVICE, USERNAME, password)
-
-    step('creating domain')
-    maestro.domain.create_domain(PARENT_DOMAIN, PROJECT_NAME)
-
-    step('creating database')
-    maestro.db.create_db(DB_NAME, DB_TYPE, DB_USER, DB_PASS)
+    maestro = Maestro()
 
     step('adjusting for SSH')
-    maestro.ssh.ensure_authorized_key(expanduser('~/.ssh/id_rsa.pub'))
+    maestro.ssh.ensure_authorized_key()
+
+    step('creating domain')
+    maestro.domain.create_domain()
+
+    step('creating database')
+    maestro.db.create_db()
 
     step('creating foundation applications')
     maestro.apps.prepare_apps()
+
+    step('preparing working tree')
+    maestro.git.prepare_working_tree()
+
+    step('preparing website')
+    maestro.project.prepare_project()
 
     success('website created!')
