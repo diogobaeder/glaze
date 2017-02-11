@@ -187,8 +187,11 @@ class Git(Component):
             self.git(
                 'init .',
                 'remote add origin {}'.format(env.repository),
-                'pull --ff origin master',
             )
+        self.git(
+            'fetch origin',
+            'reset --hard origin/master',
+        )
 
     def git(self, *commands):
         with cd(env.project_dir):
@@ -213,7 +216,7 @@ class Project(Component):
             put(settings_module_path,
                 join(env.project_dir, settings_module_path))
             self.manage('migrate')
-            self.manage('collectstatic')
+            self.manage('collectstatic --noinput')
             if load_users:
                 self.manage('loaddata users.json')
 
