@@ -54,9 +54,11 @@ env.repository = 'git@github.com:diogobaeder/glaze.git'
 env.project_dir = join(env.webapps, env.project)
 env.django_settings_module = 'glaze.prod_settings'
 env.load_users = True
-env.server_processes = 16
+env.server_processes = 5
 env.server_port = None
 env.https = True
+env.logoutput = join(
+    env.home_dir, 'logs', 'user', '{}.log'.format(env.project))
 
 
 os.environ['WEBFACTION_USER'] = env.user
