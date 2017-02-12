@@ -143,6 +143,13 @@ class Component:
         if boot not in run('crontab -l'):
             self.client.create_cronjob(boot)
 
+    def is_running(self, program):
+        with warn_only():
+            result = run('pgrep {}'.format(program))
+        if result.failed:
+            return False
+        return bool(result.strip())
+
     def all_subdomains(self):
         return [env.project] + self.static_subdomains()
 
@@ -287,9 +294,15 @@ class Project(Component):
 
 
 class Website(Component):
+    COMMAND = 'cd {} && circusd --daemon server.cfg'.format(env.project_dir)
+
     def prepare(self):
         for d in self.all_subdomains():
             self.create_website(d)
+
+        self.add_on_reboot(self.COMMAND)
+        if not self.is_running('circusd'):
+            run(self.COMMAND)
 
     def create_website(self, subdomain):
         info('creating website for:', subdomain)
@@ -315,7 +328,7 @@ class Cache(Component):
         self.start()
 
     def start(self):
-        if not run('pgrep memcached').strip():
+        if not self.is_running('memcached'):
             run(self.COMMAND)
 
 
