@@ -23,6 +23,7 @@ from fabric import colors
 from fabric.api import (
     cd, env, prefix, put, run, shell_env, task, warn_only
 )
+from fabric.contrib.files import upload_template
 from wfcli import WebFactionAPI, WebfactionWebsiteToSsl
 
 from glaze import prod_settings
@@ -45,6 +46,8 @@ env.webapps = '/home/diogobaeder/webapps'
 env.repository = 'git@github.com:diogobaeder/glaze.git'
 env.project_dir = join(env.webapps, env.project)
 env.django_settings_module = 'glaze.prod_settings'
+env.load_users = True
+env.statics = ['static', 'upload']
 
 
 def info(*texts):
@@ -109,6 +112,10 @@ class Maestro:
     def project(self):
         return Project(self.client)
 
+    @property
+    def cache(self):
+        return Cache(self.client)
+
 
 class Component:
     def __init__(self, client: WebFactionClient):
@@ -116,12 +123,12 @@ class Component:
 
 
 class Domain(Component):
-    def create_domain(self):
+    def prepare(self):
         self.client.create_domain(env.parent_domain, [env.project])
 
 
 class Database(Component):
-    def create_db(self):
+    def prepare(self):
         if not self._has_user(env.db_user):
             self.client.create_db_user(env.db_user, env.db_pass, env.db_type)
         if not self._has_db(env.db_name):
@@ -137,15 +144,15 @@ class Database(Component):
 
 
 class Applications(Component):
-    def prepare_apps(self):
+    def prepare(self):
         self.create_app('git', 'git')
         run('mkdir -p {}'.format(join(env.home_dir, 'bin')))
         run('mkdir -p {}'.format(join(env.home_dir, 'tmp')))
         run('easy_install-{} --upgrade pip'.format(env.python_version))
-        self.install('virtualenv', 'virtualenvwrapper', 'circus', 'chaussette')
+        self.install('virtualenv', 'virtualenvwrapper', 'circus')
         app = self.create_app(env.project, 'custom_app_with_port')
-        self.create_static('static')
-        self.create_static('uploads')
+        for static in env.statics:
+            self.create_static(static)
 
     def create_static(self, static_name):
         path = join(env.project_dir, static_name)
@@ -182,7 +189,7 @@ class SSH(Component):
 
 
 class Git(Component):
-    def prepare_working_tree(self):
+    def prepare(self):
         if not self._has_working_tree():
             self.git(
                 'init .',
@@ -205,22 +212,29 @@ class Git(Component):
 
 
 class Project(Component):
-    def prepare_project(self, load_users=False):
+    def prepare(self):
+        if not self._has_virtualenv():
+            self._create_virtualenv()
+
+        with shell_env(TMPDIR='~/tmp'):
+            self.env_run('.env/bin/pip install -r requirements.txt')
+
+        self._setup_django()
+        port = self.client.list_apps()[env.project]['port']
+        upload_template(
+            'server.cfg.template', join(env.project_dir, 'server.cfg'), env)
+
+    def _setup_django(self):
         settings_module_path = '{}.py'.format(
             env.django_settings_module.replace('.', '/'))
-        if not self._has_virtualenv():
-            self.create_virtualenv()
+        put(settings_module_path,
+            join(env.project_dir, settings_module_path))
+        self.manage('migrate')
+        self.manage('collectstatic --noinput')
+        if env.load_users:
+            self.manage('loaddata users.json')
 
-            with shell_env(TMPDIR='~/tmp'):
-                self.env_run('.env/bin/pip install -r requirements.txt')
-            put(settings_module_path,
-                join(env.project_dir, settings_module_path))
-            self.manage('migrate')
-            self.manage('collectstatic --noinput')
-            if load_users:
-                self.manage('loaddata users.json')
-
-    def create_virtualenv(self):
+    def _create_virtualenv(self):
         with cd(env.project_dir):
             run('virtualenv .env')
 
@@ -236,6 +250,19 @@ class Project(Component):
         with cd(env.project_dir), warn_only():
             result = run('test -d .env')
         return not result.failed
+
+
+class Cache(Component):
+    COMMAND = (
+        'memcached -d -m 50 -s $HOME/memcached.sock -P $HOME/memcached.pid')
+
+    def prepare(self):
+        self.client.create_cronjob('@reboot {}'.format(self.COMMAND))
+        self.start()
+
+    def start(self):
+        if not run('pgrep memcached').strip():
+            run(self.COMMAND)
 
 
 def step(*texts):
@@ -256,18 +283,21 @@ def create_website():
     maestro.ssh.ensure_authorized_key()
 
     step('creating domain')
-    maestro.domain.create_domain()
+    maestro.domain.prepare()
 
     step('creating database')
-    maestro.db.create_db()
+    maestro.db.prepare()
 
     step('creating foundation applications')
-    maestro.apps.prepare_apps()
+    maestro.apps.prepare()
 
     step('preparing working tree')
-    maestro.git.prepare_working_tree()
+    maestro.git.prepare()
+
+    step('preparing cache')
+    maestro.cache.prepare()
 
     step('preparing website')
-    maestro.project.prepare_project()
+    maestro.project.prepare()
 
     success('website created!')

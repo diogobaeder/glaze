@@ -55,6 +55,7 @@ local_settings.py
 prod_settings.py
 db.sqlite3
 uploads/
+server.cfg
 
 # Flask stuff:
 instance/
