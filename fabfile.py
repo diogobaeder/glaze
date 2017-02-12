@@ -281,6 +281,7 @@ class Project(Component):
             join(env.project_dir, settings_module_path))
         self.manage('migrate')
         self.manage('collectstatic --noinput')
+        self.manage('compilemessages')
 
     def _create_virtualenv(self):
         with cd(env.project_dir):
