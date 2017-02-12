@@ -5,7 +5,7 @@ statsd = 1
 httpd = 1
 
 [watcher:webapp]
-cmd = bin/chaussette --fd $(circus.sockets.web)
+cmd = bin/chaussette --fd $(circus.sockets.web) --backend meinheld glaze.wsgi.application
 numprocesses = 5
 use_sockets = True
 working_dir = %(project_dir)s
