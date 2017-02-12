@@ -174,7 +174,7 @@ class Applications(Component):
         run('mkdir -p {}'.format(join(env.home_dir, 'bin')))
         run('mkdir -p {}'.format(join(env.home_dir, 'tmp')))
         run('easy_install-{} --upgrade pip'.format(env.python_version))
-        self.install('virtualenv', 'virtualenvwrapper', 'circus')
+        self.install('virtualenv', 'virtualenvwrapper', 'circus', 'circus-web')
         self.create_app(env.project, 'custom_app_with_port')
         for static in env.statics:
             self.create_static(static)
