@@ -363,7 +363,6 @@ def create_website():
     maestro.project.prepare()
 
     step('preparing website')
-    run('chmod +x {}'.format(join(env.project_dir, '.env/bin/uwsgi')))
     maestro.website.prepare()
 
     success('website created!')
