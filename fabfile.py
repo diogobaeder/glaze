@@ -307,7 +307,9 @@ class Website(Component):
             run(self.COMMAND)
         else:
             with cd(env.project_dir):
+                run('circusctl stop')
                 run('circusctl reloadconfig')
+                run('circusctl start')
 
     def create_website(self, subdomain):
         info('creating website for:', subdomain)
