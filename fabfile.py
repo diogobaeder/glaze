@@ -22,7 +22,7 @@ from uuid import uuid4
 import keyring
 from fabric import colors
 from fabric.api import (
-    cd, env, prefix, put, run, shell_env, task, warn_only
+    cd, env, local, prefix, put, run, shell_env, task, warn_only
 )
 from fabric.contrib.files import upload_template, exists
 from wfcli import WebFactionAPI, WebfactionWebsiteToSsl
@@ -53,7 +53,7 @@ env.webapps = '/home/diogobaeder/webapps'
 env.repository = 'git@github.com:diogobaeder/glaze.git'
 env.project_dir = join(env.webapps, env.project)
 env.django_settings_module = 'glaze.prod_settings'
-env.load_users = True
+env.load_users = False
 env.server_processes = 5
 env.server_port = None
 env.https = True
@@ -238,6 +238,9 @@ class Git(Component):
                 'init .',
                 'remote add origin {}'.format(env.repository),
             )
+        self.fetch_latest()
+
+    def fetch_latest(self):
         self.git(
             'fetch origin',
             'reset --hard origin/master',
@@ -259,23 +262,25 @@ class Project(Component):
         if not self._has_virtualenv():
             self._create_virtualenv()
 
-        with shell_env(TMPDIR='~/tmp'):
-            self.env_run('.env/bin/pip install -r requirements.txt')
-
         self._setup_django()
         env.server_port = self.client.list_apps()[env.project]['port']
         upload_template(
             'server.cfg.template', join(env.project_dir, 'server.cfg'), env)
 
     def _setup_django(self):
+        self.update_files_and_data()
+        if env.load_users:
+            self.manage('loaddata users.json')
+
+    def update_files_and_data(self):
+        with shell_env(TMPDIR='~/tmp'):
+            self.env_run('.env/bin/pip install -r requirements.txt')
         settings_module_path = '{}.py'.format(
             env.django_settings_module.replace('.', '/'))
         put(settings_module_path,
             join(env.project_dir, settings_module_path))
         self.manage('migrate')
         self.manage('collectstatic --noinput')
-        if env.load_users:
-            self.manage('loaddata users.json')
 
     def _create_virtualenv(self):
         with cd(env.project_dir):
@@ -306,10 +311,15 @@ class Website(Component):
         if not self.is_running('circusd'):
             run(self.COMMAND)
         else:
-            with cd(env.project_dir):
-                run('circusctl stop')
-                run('circusctl reloadconfig')
-                run('circusctl start')
+            self.reload_config()
+
+    def reload_config(self):
+        with cd(env.project_dir):
+            run('circusctl reloadconfig')
+
+    def reload(self):
+        with cd(env.project_dir):
+            run('circusctl reload')
 
     def create_website(self, subdomain):
         info('creating website for:', subdomain)
@@ -379,3 +389,18 @@ def create_website():
     maestro.website.prepare()
 
     success('website created!')
+
+
+@task
+def deploy():
+    maestro = Maestro()
+
+    step('fetching changes')
+    local('git ps')
+    maestro.git.fetch_latest()
+
+    step('updating dependencies, files and data')
+    maestro.project.update_files_and_data()
+
+    step('reloading server')
+    maestro.website.reload()
