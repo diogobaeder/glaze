@@ -11,7 +11,7 @@
     display: block;
     width: 120px;
     height: 120px;
-    background: url(/static/img/social-icon-png-1837.png) no-repeat;
+    background: url(../img/social-icon-png-1837.png) no-repeat;
     text-indent: -10000em;
     margin: 10px;
 }
