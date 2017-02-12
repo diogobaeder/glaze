@@ -303,6 +303,9 @@ class Website(Component):
         self.add_on_reboot(self.COMMAND)
         if not self.is_running('circusd'):
             run(self.COMMAND)
+        else:
+            with cd(env.project_dir):
+                run('circusctl reloadconfig')
 
     def create_website(self, subdomain):
         info('creating website for:', subdomain)
@@ -368,6 +371,7 @@ def create_website():
     maestro.project.prepare()
 
     step('preparing website')
+    run('chmod +x {}'.format(join(env.project_dir, '.env/bin/uwsgi')))
     maestro.website.prepare()
 
     success('website created!')

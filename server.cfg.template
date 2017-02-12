@@ -1,13 +1,16 @@
 [watcher:dwebworker]
-cmd = .env/bin/uwsgi server.cfg
+cmd = .env/bin/uwsgi
+    --http-socket fd://$(circus.sockets.dwebworker)
+    --wsgi-file %(project)s/wsgi.py
+    --processes %(server_processes)s
 use_sockets = True
+send_hup = True
+stop_signal = QUIT
 
 [env:dwebworker]
 PYTHONPATH = %(project_dir)s
 DJANGO_SETTINGS_MODULE=%(django_settings_module)s
 
-[uwsgi]
-socket = 127.0.0.1:%(server_port)s
-chdir = %(project_dir)s
-wsgi-file = %(project)s/wsgi.py
-processes = %(server_processes)s
+[socket:dwebworker]
+host = 0.0.0.0
+port = %(server_port)s
