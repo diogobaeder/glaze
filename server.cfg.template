@@ -1,16 +1,19 @@
 [circus]
 logoutput = %(logoutput)s
 debug = True
+statsd = 1
+httpd = 1
 
-[watcher:dwebworker]
-cmd = .env/bin/uwsgi
-    --http 0.0.0.0:%(server_port)s
-    --wsgi-file %(project)s/wsgi.py
-    --processes %(server_processes)s
-send_hup = True
-stop_signal = QUIT
+[watcher:webapp]
+cmd = bin/chaussette --fd $(circus.sockets.web)
+numprocesses = 5
+use_sockets = True
 working_dir = %(project_dir)s
 
-[env:dwebworker]
+[socket:web]
+host = 127.0.0.1
+port = %(server_port)s
+
+[env:webapp]
 PYTHONPATH = %(project_dir)s
 DJANGO_SETTINGS_MODULE=%(django_settings_module)s

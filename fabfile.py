@@ -1,22 +1,5 @@
-"""
-What to install/configure:
-- Domain
-- Postgres
-- Git
-- Website:
-  Download
-  Python dependencies
-  Migrate database
-  Collect static
-- Static app
-- Circus
-  Memcache
-  Website
-
-"""
-
 import os
-from os.path import expanduser, join
+from os.path import join
 from uuid import uuid4
 
 import keyring
@@ -53,7 +36,6 @@ env.webapps = '/home/diogobaeder/webapps'
 env.repository = 'git@github.com:diogobaeder/glaze.git'
 env.project_dir = join(env.webapps, env.project)
 env.django_settings_module = 'glaze.prod_settings'
-env.load_users = False
 env.server_processes = 5
 env.server_port = None
 env.https = True
@@ -193,7 +175,7 @@ class Applications(Component):
         run('mkdir -p {}'.format(join(env.home_dir, 'tmp')))
         run('easy_install-{} --upgrade pip'.format(env.python_version))
         self.install('virtualenv', 'virtualenvwrapper', 'circus')
-        app = self.create_app(env.project, 'custom_app_with_port')
+        self.create_app(env.project, 'custom_app_with_port')
         for static in env.statics:
             self.create_static(static)
 
@@ -262,15 +244,10 @@ class Project(Component):
         if not self._has_virtualenv():
             self._create_virtualenv()
 
-        self._setup_django()
+        self.update_files_and_data()
         env.server_port = self.client.list_apps()[env.project]['port']
         upload_template(
             'server.cfg.template', join(env.project_dir, 'server.cfg'), env)
-
-    def _setup_django(self):
-        self.update_files_and_data()
-        if env.load_users:
-            self.manage('loaddata users.json')
 
     def update_files_and_data(self):
         with shell_env(TMPDIR='~/tmp'):
@@ -405,3 +382,11 @@ def deploy():
 
     step('reloading server')
     maestro.website.reload()
+
+
+@task
+def load_data(fixture_file):
+    maestro = Maestro()
+
+    step('loading data:', fixture_file)
+    maestro.project.manage('loaddata {}'.format(fixture_file))
