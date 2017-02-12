@@ -15,6 +15,7 @@ What to install/configure:
 
 """
 
+import os
 from os.path import expanduser, join
 from uuid import uuid4
 
@@ -23,7 +24,7 @@ from fabric import colors
 from fabric.api import (
     cd, env, prefix, put, run, shell_env, task, warn_only
 )
-from fabric.contrib.files import upload_template
+from fabric.contrib.files import upload_template, exists
 from wfcli import WebFactionAPI, WebfactionWebsiteToSsl
 
 from glaze import prod_settings
@@ -31,9 +32,15 @@ from glaze import prod_settings
 
 env.use_ssh_config = True
 env.hosts = ['webfaction']
+env.ip = '207.38.86.14'
 env.python_version = '3.5'
 env.project = 'glaze'
 env.parent_domain = 'diogobaeder.com.br'
+env.statics = ['static', 'upload']
+env.subdomains = [env.project] + [
+    '{}{}'.format(env.project, static)
+    for static in env.statics
+]
 env.user = 'diogobaeder'
 env.password = keyring.get_password('webfaction', env.user)
 env.db_user = prod_settings.DATABASES['default']['USER']
@@ -47,7 +54,13 @@ env.repository = 'git@github.com:diogobaeder/glaze.git'
 env.project_dir = join(env.webapps, env.project)
 env.django_settings_module = 'glaze.prod_settings'
 env.load_users = True
-env.statics = ['static', 'upload']
+env.server_processes = 16
+env.server_port = None
+env.https = True
+
+
+os.environ['WEBFACTION_USER'] = env.user
+os.environ['WEBFACTION_PASS'] = env.password
 
 
 def info(*texts):
@@ -116,15 +129,33 @@ class Maestro:
     def cache(self):
         return Cache(self.client)
 
+    @property
+    def website(self):
+        return Website(self.client)
+
 
 class Component:
     def __init__(self, client: WebFactionClient):
         self.client = client
 
+    def add_on_reboot(self, command):
+        boot = '@reboot {}'.format(command)
+        if boot not in run('crontab -l'):
+            self.client.create_cronjob(boot)
+
+    def all_subdomains(self):
+        return [env.project] + self.static_subdomains()
+
+    def static_subdomains(self):
+        return [
+            '{}{}'.format(env.project, static)
+            for static in env.statics
+        ]
+
 
 class Domain(Component):
     def prepare(self):
-        self.client.create_domain(env.parent_domain, [env.project])
+        self.client.create_domain(env.parent_domain, self.all_subdomains())
 
 
 class Database(Component):
@@ -146,6 +177,9 @@ class Database(Component):
 class Applications(Component):
     def prepare(self):
         self.create_app('git', 'git')
+        if not exists('~/.acme.sh'):
+            run('curl https://get.acme.sh | sh')
+        run('~/.acme.sh/acme.sh --upgrade')
         run('mkdir -p {}'.format(join(env.home_dir, 'bin')))
         run('mkdir -p {}'.format(join(env.home_dir, 'tmp')))
         run('easy_install-{} --upgrade pip'.format(env.python_version))
@@ -158,7 +192,7 @@ class Applications(Component):
         path = join(env.project_dir, static_name)
         run('mkdir -p {}'.format(path))
         self.create_app(
-            '{}_{}'.format(env.project, static_name), 'symlink_static_only',
+            '{}{}'.format(env.project, static_name), 'symlink_static_only',
             path)
 
     def install(self, *packages):
@@ -220,7 +254,7 @@ class Project(Component):
             self.env_run('.env/bin/pip install -r requirements.txt')
 
         self._setup_django()
-        port = self.client.list_apps()[env.project]['port']
+        env.server_port = self.client.list_apps()[env.project]['port']
         upload_template(
             'server.cfg.template', join(env.project_dir, 'server.cfg'), env)
 
@@ -252,12 +286,32 @@ class Project(Component):
         return not result.failed
 
 
+class Website(Component):
+    def prepare(self):
+        for d in self.all_subdomains():
+            self.create_website(d)
+
+    def create_website(self, subdomain):
+        info('creating website for:', subdomain)
+        domain = '{}.{}'.format(subdomain, env.parent_domain)
+        websites = [w['name'] for w in self.client.list_websites()]
+        if subdomain not in websites:
+            self.client.create_website(
+                subdomain, env.ip, False, [domain], apps=(
+                    [subdomain, '/'],
+                ))
+            if env.https:
+                info('securing domain:', domain)
+                ssl = WebfactionWebsiteToSsl(env.hosts[0])
+                ssl.secure(domain, False)
+
+
 class Cache(Component):
     COMMAND = (
         'memcached -d -m 50 -s $HOME/memcached.sock -P $HOME/memcached.pid')
 
     def prepare(self):
-        self.client.create_cronjob('@reboot {}'.format(self.COMMAND))
+        self.add_on_reboot(self.COMMAND)
         self.start()
 
     def start(self):
@@ -297,7 +351,10 @@ def create_website():
     step('preparing cache')
     maestro.cache.prepare()
 
-    step('preparing website')
+    step('preparing project')
     maestro.project.prepare()
+
+    step('preparing website')
+    maestro.website.prepare()
 
     success('website created!')

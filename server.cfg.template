@@ -1,15 +1,13 @@
 [watcher:dwebworker]
 cmd = .env/bin/uwsgi server.cfg
 use_sockets = True
-numprocesses = 1
 
 [env:dwebworker]
-PYTHONPATH = %(project_dir)
-DJANGO_SETTINGS_MODULE=%(django_settings_module)
+PYTHONPATH = %(project_dir)s
+DJANGO_SETTINGS_MODULE=%(django_settings_module)s
 
 [uwsgi]
-socket = 127.0.0.1:%(port)
-chdir = %(project_dir)
-wsgi-file = %(project)/wsgi.py
-processes = 16
-threads = 2
+socket = 127.0.0.1:%(server_port)s
+chdir = %(project_dir)s
+wsgi-file = %(project)s/wsgi.py
+processes = %(server_processes)s
