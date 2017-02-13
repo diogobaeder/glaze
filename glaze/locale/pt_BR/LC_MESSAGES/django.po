@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-13 06:15+0000\n"
+"POT-Creation-Date: 2017-02-13 06:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,12 +19,12 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: glaze/models.py:11
-msgid "user"
-msgstr "usuário"
+msgid "User"
+msgstr "Usuário"
 
-#: glaze/models.py:12
-msgid "currency"
-msgstr "moeda"
+#: glaze/models.py:12 glaze/templates/glaze/profile.html:11
+msgid "Currency"
+msgstr "Moeda"
 
 #: glaze/models.py:15 glaze/templates/glaze/profile.html:5
 #: glaze/templates/glaze/profile.html:8
@@ -44,10 +44,6 @@ msgstr "Inglês"
 #: glaze/settings.py:194
 msgid "Portuguese"
 msgstr "Português"
-
-#: glaze/templates/glaze/profile.html:11
-msgid "Currency"
-msgstr "Moeda"
 
 #: glaze/templates/glaze/profile.html:16
 msgid "Edit"

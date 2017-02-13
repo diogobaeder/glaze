@@ -8,8 +8,8 @@ from django.utils.translation import ugettext as _
 
 class Profile(models.Model):
     user = models.OneToOneField(
-        User, on_delete=models.CASCADE, verbose_name=_('user'))
-    currency = models.CharField(_('currency'), max_length=10, default='USD')
+        User, on_delete=models.CASCADE, verbose_name=_('User'))
+    currency = models.CharField(_('Currency'), max_length=10, default='USD')
 
     class Meta:
         verbose_name = _('Profile')
