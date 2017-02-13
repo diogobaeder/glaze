@@ -55,7 +55,7 @@ SecretStorage==2.3.1
 simplegeneric==0.8.1
 simplejson==3.10.0
 six==1.10.0
-sorl-thumbnail==12.3
+sorl-thumbnail==12.4a1
 sqlparse==0.2.2
 tomako==0.1.0.post1
 TornadIO2==0.0.3
