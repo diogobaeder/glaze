@@ -17,6 +17,8 @@ urlpatterns = [
     url(r'^recipes/$', views.RecipeList.as_view(), name='recipes'),
     url(r'^recipes/(?P<pk>[0-9]+)/$',
         views.RecipeDetail.as_view(), name='recipe-detail'),
+    url(r'^recipes/clone/(?P<pk>[0-9]+)/$',
+        views.clone_recipe, name='recipe-clone'),
     url(r'recipe/add/$',
         views.RecipeCreate.as_view(), name='recipe-add'),
     url(r'recipe/(?P<pk>[0-9]+)/$',

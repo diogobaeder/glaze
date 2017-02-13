@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import (
@@ -122,3 +123,9 @@ class RecipeUpdate(RecipeBound, UpdateView):
 @method_decorator(login_required, name='dispatch')
 class RecipeDelete(RecipeBound, DeleteView):
     pass
+
+
+@login_required
+def clone_recipe(request, pk):
+    recipe = Recipe.objects.for_user(request.user).get(pk=pk).clone()
+    return redirect('recipe-update', pk=recipe.pk)

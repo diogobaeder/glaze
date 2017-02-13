@@ -1,5 +1,7 @@
 from decimal import Decimal
 
+from django.urls import reverse
+
 from .base import RecipeTestCase
 from recipes.models import Kind, Ingredient, WeightUnit
 
@@ -130,3 +132,15 @@ class RecipeViewsTest(RecipeTestCase):
         response = self.client.get('/recipes/recipes/')
 
         self.assertNotContains(response, recipe.name)
+
+    def test_clones_recipe_and_redirects_to_the_copy(self):
+        recipe = self.create_recipe()
+
+        response = self.client.get(
+            '/recipes/recipes/clone/{}/'.format(recipe.pk))
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.get('Location'),
+                         reverse('recipe-update', kwargs={
+                             'pk': recipe.pk + 1,
+                         }))

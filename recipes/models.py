@@ -133,6 +133,21 @@ class Recipe(UserBoundModel):
 
         return price / final_percentage
 
+    def clone(self):
+        parts = self.parts
+        self.name = '{} (Copy of {})'.format(self.name, self.pk)
+        self.pk = None
+        self.id = None
+        self.save()
+
+        for part in parts:
+            part.pk = None
+            part.id = None
+            part.recipe = self
+            part.save()
+
+        return self
+
 
 class RecipePart(DateBoundModel):
     recipe = models.ForeignKey(

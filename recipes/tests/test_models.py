@@ -183,6 +183,29 @@ class RecipeTest(RecipeTestCase):
 
         self.assertEqual(recipe.price, Decimal('0'))
 
+    def test_copies_a_recipe(self):
+        ingredient1 = self.create_ingredient(
+            price=Decimal('1.23'), weight_unit=WeightUnit.g)
+        ingredient2 = self.create_ingredient(
+            price=Decimal('2.34'), weight_unit=WeightUnit.Kg)
+        recipe1 = Recipe.objects.create(
+            user=self.user,
+            name='Interesting Yellow'
+        )
+        recipe1.add_part(ingredient1, percentage=Decimal('20'))
+        recipe1.add_part(ingredient2, percentage=Decimal('30'))
+        id1 = recipe1.pk
+        price1 = recipe1.price
+        name1 = recipe1.name
+
+        recipe2 = recipe1.clone()
+        recipe2 = Recipe.objects.get(pk=recipe2.pk)
+
+        self.assertNotEqual(recipe2.pk, id1)
+        self.assertEqual(recipe2.price, price1)
+        self.assertEqual(recipe2.price, recipe1.price)
+        self.assertEqual(recipe2.name, '{} (Copy of {})'.format(name1, id1))
+
 
 class KindTest(RecipeTestCase):
     def test_converts_to_pretty_name(self):

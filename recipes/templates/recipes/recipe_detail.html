@@ -50,3 +50,7 @@
 
 {% endblock %}
 
+{% block append_buttons %}
+<a class="btn btn-info" href="{% url 'recipe-clone' pk=instance.pk %}">{% trans 'Clone this recipe' %}</a>
+{% endblock %}
+
