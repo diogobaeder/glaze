@@ -1,9 +1,17 @@
 {% extends 'base.html' %}
 
+{% load i18n %}
+
 {% block bootstrap3_title %}Home | Glaze{% endblock %}
 
 {% block content %}
 <h1>Home</h1>
 
-<p>It works!</p>
+{% blocktrans %}
+<p>Welcome to Glaze - a glaze recipes calculation and management tool.</p>
+<p>This tool will help you organize ingredients and recipes so that it
+gets easier to compare prices, weights, see photos of recipes etc.</p>
+<p>You can also use the <a href="/accounts/profile/">Configuration</a>
+page to set your preferred currency and language.</p>
+{% endblocktrans %}
 {% endblock %}

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-13 01:50+0000\n"
+"POT-Creation-Date: 2017-02-13 06:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -75,8 +75,8 @@ msgid "Ingredients"
 msgstr "Ingredientes"
 
 #: templates/base.html:40
-msgid "Profile"
-msgstr "Perfil"
+msgid "Configuration"
+msgstr "Configuração"
 
 #: templates/base.html:41
 msgid "Logout"
@@ -85,6 +85,25 @@ msgstr "Sair"
 #: templates/base.html:43
 msgid "Login"
 msgstr "Entrar"
+
+#: templates/home.html:10
+msgid ""
+"\n"
+"<p>Welcome to Glaze - a glaze recipes calculation and management tool.</p>\n"
+"<p>This tool will help you organize ingredients and recipes so that it\n"
+"gets easier to compare prices, weights, see photos of recipes etc.</p>\n"
+"<p>You can also use the <a href=\"/accounts/profile/\">Configuration</a>\n"
+"page to set your preferred currency and language.</p>\n"
+msgstr ""
+"\n"
+"<p>Bem-vind@ Glaze - uma ferramenta de cálculo e gerenciamento de receitas "
+"de esmaltes.</p>\n"
+"<p>Esta ferramenta irá ajudá-l@ a organizar ingredientes e receitas de forma "
+"que\n"
+"fique mais fácil de comparar preços, pesos, ver fotos de receitas etc.</p>\n"
+"<p>Você também pode usar a página <a href=\"/accounts/profile/"
+"\">Configuração</a>\n"
+"para definir sua moeda e linguagem preferidas.</p>\n"
 
 #: templates/profile.html:5 templates/profile.html:8
 msgid "Account"

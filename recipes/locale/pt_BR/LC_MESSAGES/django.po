@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-13 01:50+0000\n"
+"POT-Creation-Date: 2017-02-13 06:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -54,7 +54,7 @@ msgstr "Nome"
 
 #: recipes/models.py:78 recipes/templates/recipes/ingredient_detail.html:7
 #: recipes/templates/recipes/ingredient_list.html:10
-#: recipes/templates/recipes/recipe_detail.html:35
+#: recipes/templates/recipes/recipe_detail.html:33
 msgid "Kind"
 msgstr "Tipo"
 
@@ -63,7 +63,7 @@ msgid "Weight unit"
 msgstr "Unidade de peso"
 
 #: recipes/models.py:85 recipes/models.py:156
-#: recipes/templates/recipes/recipe_detail.html:34
+#: recipes/templates/recipes/recipe_detail.html:32
 msgid "Ingredient"
 msgstr "Ingrediente"
 
@@ -83,7 +83,7 @@ msgstr "Imagem"
 msgid "Recipe"
 msgstr "Receita"
 
-#: recipes/models.py:158 recipes/templates/recipes/recipe_detail.html:36
+#: recipes/models.py:158 recipes/templates/recipes/recipe_detail.html:34
 msgid "Percentage"
 msgstr "Porcentagem"
 
@@ -142,13 +142,13 @@ msgstr "Adicionar novo(a)"
 msgid "No image"
 msgstr "Sem imagem"
 
-#: recipes/templates/recipes/recipe_detail.html:28
-msgid "Clone this recipe"
-msgstr "Clonar esta receita"
-
-#: recipes/templates/recipes/recipe_detail.html:37
+#: recipes/templates/recipes/recipe_detail.html:35
 msgid "Relative Price"
 msgstr "Preço Relativo"
+
+#: recipes/templates/recipes/recipe_detail.html:54
+msgid "Clone this recipe"
+msgstr "Clonar esta receita"
 
 #: recipes/templates/recipes/recipe_form.html:8
 msgid "Parts"
