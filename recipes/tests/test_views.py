@@ -144,3 +144,14 @@ class RecipeViewsTest(RecipeTestCase):
                          reverse('recipe-update', kwargs={
                              'pk': recipe.pk + 1,
                          }))
+
+    def test_doesnt_show_another_users_ingredient_for_editing_recipe(self):
+        self.create_ingredient(name='Water')
+        self.create_ingredient(name='Sand')
+        self.create_ingredient(name='Pepper', user=self.another_user)
+
+        response = self.client.get('/recipes/recipe/add/')
+
+        self.assertContains(response, 'Water')
+        self.assertContains(response, 'Sand')
+        self.assertNotContains(response, 'Pepper')

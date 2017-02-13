@@ -1,5 +1,9 @@
 from django.core.exceptions import ObjectDoesNotExist
-from django.forms import ModelForm, ValidationError, inlineformset_factory
+from django.forms import (
+    ModelForm,
+    ValidationError,
+    inlineformset_factory,
+)
 
 from recipes.models import Ingredient, Recipe, RecipePart
 
@@ -30,5 +34,16 @@ class RecipeForm(UserBoundForm):
         fields = ['name', 'description', 'image']
 
 
+class RecipePartForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
+        super().__init__(*args, **kwargs)
+        self.fields['ingredient'].queryset = Ingredient.objects.for_user(user)
+
+    class Meta:
+        model = RecipePart
+        fields = ['ingredient', 'percentage']
+
+
 RecipePartFormset = inlineformset_factory(
-    Recipe, RecipePart, fields=['ingredient', 'percentage'], extra=5)
+    Recipe, RecipePart, RecipePartForm, extra=5)
