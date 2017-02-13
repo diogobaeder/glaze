@@ -30,7 +30,7 @@
                 <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" class="img-fluid" />
                 </a>
             {% empty %}
-                <p>{% trans "No image" %} ({{ recipe.image }})</p>
+                <p>{% trans "No image" %} ({{ recipe.image - recipe.image.url }})</p>
             {% endthumbnail %}
             {% endif %}
             </td>
