@@ -19,7 +19,7 @@ env.ip = '207.38.86.14'
 env.python_version = '3.5'
 env.project = 'glaze'
 env.parent_domain = 'diogobaeder.com.br'
-env.statics = ['static', 'upload']
+env.statics = ['static', 'uploads']
 env.subdomains = [env.project] + [
     '{}{}'.format(env.project, static)
     for static in env.statics
