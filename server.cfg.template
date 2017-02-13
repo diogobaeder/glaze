@@ -1,8 +1,6 @@
 [circus]
 logoutput = %(logoutput)s
 debug = True
-statsd = 1
-httpd = 1
 
 [watcher:webapp]
 cmd = .env/bin/chaussette --fd $(circus.sockets.web) --backend meinheld glaze.wsgi.application
