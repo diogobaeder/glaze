@@ -119,8 +119,16 @@ LOGGING = {
             'class': 'logging.StreamHandler',
         },
     },
+    'root': {
+        'level': 'INFO',
+        'handlers': ['console'],
+    },
     'loggers': {
         'django': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+        'sorl.thumbnail': {
             'handlers': ['console'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         },
