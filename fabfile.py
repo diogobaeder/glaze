@@ -279,7 +279,8 @@ class Project(Component):
 
 
 class Website(Component):
-    COMMAND = 'cd {} && circusd --daemon server.cfg'.format(env.project_dir)
+    COMMAND = 'cd {} && .env/bin/circusd --daemon server.cfg'.format(
+        env.project_dir)
 
     def prepare(self):
         for d in self.all_subdomains():
