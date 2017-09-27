@@ -2,7 +2,7 @@ import os
 from os.path import join
 
 import keyring
-from diogobaeder.webfaction import Maestro
+from diogobaeder.webfaction.tools import Maestro
 from fabric import colors
 from fabric.api import (
     env,
