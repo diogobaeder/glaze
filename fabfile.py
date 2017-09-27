@@ -123,9 +123,12 @@ class Component:
         self.client = client
 
     def add_on_reboot(self, command):
-        boot = '@reboot {}'.format(command)
-        if boot not in run('crontab -l'):
-            self.client.create_cronjob(boot)
+        self.add_cron('@reboot', command)
+
+    def add_cron(self, when, command):
+        cron_command = '{} {}'.format(when, command)
+        if cron_command not in run('crontab -l'):
+            self.client.create_cronjob(cron_command)
 
     def is_running(self, program):
         with warn_only():
@@ -168,9 +171,7 @@ class Database(Component):
 class Applications(Component):
     def prepare(self):
         self.create_app('git', 'git')
-        if not exists('~/.acme.sh'):
-            run('curl https://get.acme.sh | sh')
-        run('~/.acme.sh/acme.sh --upgrade')
+        self.prepare_certificate()
         run('mkdir -p {}'.format(join(env.home_dir, 'bin')))
         run('mkdir -p {}'.format(join(env.home_dir, 'tmp')))
         run('easy_install-{} --upgrade pip'.format(env.python_version))
@@ -178,6 +179,15 @@ class Applications(Component):
         self.create_app(env.project, 'custom_app_with_port')
         for static in env.statics:
             self.create_static(static)
+
+    def prepare_certificate(self):
+        if not exists('~/.acme.sh'):
+            run('curl https://get.acme.sh | sh')
+        run('~/.acme.sh/acme.sh --upgrade')
+        self.add_cron(
+            '7 0 * * *',
+            '~/.acme.sh/acme.sh --cron --force --home "{}"'.format(
+                env.home_dir))
 
     def create_static(self, static_name):
         path = join(env.project_dir, static_name)
