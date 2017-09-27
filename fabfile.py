@@ -410,10 +410,3 @@ def load_data(fixture_file):
 
     step('loading data:', fixture_file)
     maestro.project.manage('loaddata {}'.format(fixture_file))
-
-
-@task
-def prepare_certificate_manager():
-    maestro = Maestro()
-
-    maestro.apps.prepare_certificate_manager()
