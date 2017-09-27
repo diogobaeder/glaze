@@ -41,6 +41,7 @@ env.server_port = None
 env.https = True
 env.logoutput = join(
     env.home_dir, 'logs', 'user', '{}.log'.format(env.project))
+env.socat_version = '1.7.3.2'
 
 
 os.environ['WEBFACTION_USER'] = env.user
@@ -171,7 +172,7 @@ class Database(Component):
 class Applications(Component):
     def prepare(self):
         self.create_app('git', 'git')
-        self.prepare_certificate()
+        self.prepare_certificate_manager()
         run('mkdir -p {}'.format(join(env.home_dir, 'bin')))
         run('mkdir -p {}'.format(join(env.home_dir, 'tmp')))
         run('easy_install-{} --upgrade pip'.format(env.python_version))
@@ -180,7 +181,16 @@ class Applications(Component):
         for static in env.statics:
             self.create_static(static)
 
-    def prepare_certificate(self):
+    def prepare_certificate_manager(self):
+        run('mkdir -p ~/src')
+        with cd('~/src'):
+            run('wget http://www.dest-unreach.org/socat/download/'
+                'socat-{}.tar.gz'.format(env.socat_version))
+            run('tar xvzf socat-{}.tar.gz'.format(env.socat_version))
+            with cd('socat-{}'.format(env.socat_version)):
+                run('./configure --prefix={}'.format(env.home_dir))
+                run('make')
+                run('make install')
         if not exists('~/.acme.sh'):
             run('curl https://get.acme.sh | sh')
         run('~/.acme.sh/acme.sh --upgrade')
@@ -400,3 +410,10 @@ def load_data(fixture_file):
 
     step('loading data:', fixture_file)
     maestro.project.manage('loaddata {}'.format(fixture_file))
+
+
+@task
+def prepare_certificate_manager():
+    maestro = Maestro()
+
+    maestro.apps.prepare_certificate_manager()
