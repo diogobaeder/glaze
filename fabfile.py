@@ -63,7 +63,7 @@ def create_website():
     maestro = Maestro()
 
     step('adjusting for SSH')
-    maestro.ssh.ensure_authorized_key()
+    maestro.ssh.prepare()
 
     step('creating domain')
     maestro.domain.prepare()
